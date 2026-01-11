@@ -29,8 +29,8 @@ st.markdown("""
 <style>
     /* Sidebar width */
     [data-testid="stSidebar"] {
-        min-width: 320px !important;
-        max-width: 320px !important;
+        min-width: 320px;
+        max-width: 320px;
     }
     
     /* Main theme */
@@ -229,10 +229,6 @@ def predict_image(image, model, scaler):
 # MAIN APP
 # ===========================
 def main():
-    # Initialize session state for tab navigation
-    if 'active_tab' not in st.session_state:
-        st.session_state.active_tab = 0
-    
     # Header
     st.markdown("""
     <div class="header-container">
@@ -248,6 +244,10 @@ def main():
         st.error(f"⚠️ {error}")
         st.info("💡 Please run the training notebook first to generate the model files.")
         st.stop()
+    
+    # Initialize session state for navigation
+    if 'active_page' not in st.session_state:
+        st.session_state.active_page = 'Image Classification'
     
     # Sidebar - Navigation Only
     with st.sidebar:
@@ -266,60 +266,52 @@ def main():
             <h3 style="color: #667eea; font-size: 18px; margin-bottom: 15px;">
                 <i class="fas fa-compass"></i> Navigasi
             </h3>
-            <p style="color: #64748b; font-size: 13px; line-height: 1.8;">
-                Gunakan tab di atas untuk mengakses fitur-fitur sistem:
+            <p style="color: #64748b; font-size: 13px; line-height: 1.8; margin-bottom: 15px;">
+                Pilih menu di bawah untuk mengakses fitur sistem:
             </p>
         </div>
         """, unsafe_allow_html=True)
         
         # Navigation buttons
-        if st.button("", key="nav_0", use_container_width=True, help="Image Classification"):
-            st.session_state.active_tab = 0
-        st.markdown("""
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0; margin-top: -50px; cursor: pointer;" onclick="document.querySelector('[key=nav_0]').click()">
-            <p style="margin: 8px 0; color: #495057;">
-                <i class="fas fa-microscope" style="color: #667eea; margin-right: 8px;"></i>
-                <strong>Image Classification</strong><br>
-                <span style="font-size: 12px; color: #6c757d; margin-left: 24px;">Analisis gambar tunggal</span>
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        if st.button(
+            "🔬 Image Classification",
+            use_container_width=True,
+            type="primary" if st.session_state.active_page == 'Image Classification' else "secondary"
+        ):
+            st.session_state.active_page = 'Image Classification'
+            st.rerun()
         
-        if st.button("", key="nav_1", use_container_width=True, help="Batch Processing"):
-            st.session_state.active_tab = 1
-        st.markdown("""
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0; margin-top: -50px; cursor: pointer;">
-            <p style="margin: 8px 0; color: #495057;">
-                <i class="fas fa-layer-group" style="color: #667eea; margin-right: 8px;"></i>
-                <strong>Batch Processing</strong><br>
-                <span style="font-size: 12px; color: #6c757d; margin-left: 24px;">Proses multiple gambar</span>
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("<p style='font-size: 12px; color: #6c757d; margin: -5px 0 10px 10px;'>Analisis gambar tunggal</p>", unsafe_allow_html=True)
         
-        if st.button("", key="nav_2", use_container_width=True, help="Model Analysis"):
-            st.session_state.active_tab = 2
-        st.markdown("""
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0; margin-top: -50px; cursor: pointer;">
-            <p style="margin: 8px 0; color: #495057;">
-                <i class="fas fa-chart-bar" style="color: #667eea; margin-right: 8px;"></i>
-                <strong>Model Analysis</strong><br>
-                <span style="font-size: 12px; color: #6c757d; margin-left: 24px;">Performa & visualisasi</span>
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        if st.button(
+            "📦 Batch Processing",
+            use_container_width=True,
+            type="primary" if st.session_state.active_page == 'Batch Processing' else "secondary"
+        ):
+            st.session_state.active_page = 'Batch Processing'
+            st.rerun()
         
-        if st.button("", key="nav_3", use_container_width=True, help="Information"):
-            st.session_state.active_tab = 3
-        st.markdown("""
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0; margin-top: -50px; cursor: pointer;">
-            <p style="margin: 8px 0; color: #495057;">
-                <i class="fas fa-info-circle" style="color: #667eea; margin-right: 8px;"></i>
-                <strong>Information</strong><br>
-                <span style="font-size: 12px; color: #6c757d; margin-left: 24px;">Tentang penelitian</span>
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("<p style='font-size: 12px; color: #6c757d; margin: -5px 0 10px 10px;'>Proses multiple gambar</p>", unsafe_allow_html=True)
+        
+        if st.button(
+            "📊 Model Analysis",
+            use_container_width=True,
+            type="primary" if st.session_state.active_page == 'Model Analysis' else "secondary"
+        ):
+            st.session_state.active_page = 'Model Analysis'
+            st.rerun()
+        
+        st.markdown("<p style='font-size: 12px; color: #6c757d; margin: -5px 0 10px 10px;'>Performa & visualisasi</p>", unsafe_allow_html=True)
+        
+        if st.button(
+            "📖 Information",
+            use_container_width=True,
+            type="primary" if st.session_state.active_page == 'Information' else "secondary"
+        ):
+            st.session_state.active_page = 'Information'
+            st.rerun()
+        
+        st.markdown("<p style='font-size: 12px; color: #6c757d; margin: -5px 0 10px 10px;'>Tentang penelitian</p>", unsafe_allow_html=True)
         
         st.markdown("---")
         
@@ -332,16 +324,9 @@ def main():
         </div>
         """, unsafe_allow_html=True)
     
-    # Main content with tabs (Streamlit native tabs don't support HTML, so icons are styled via CSS)
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "Image Classification",
-        "Batch Processing", 
-        "Model Analysis",
-        "Information"
-    ])
-    
-    # TAB 1: Single Image Classification
-    with tab1:
+    # Main content based on active page
+    # ===== PAGE 1: Image Classification =====
+    if st.session_state.active_page == 'Image Classification':
         st.markdown("### Upload Medical Image for Analysis")
         
         col1, col2 = st.columns([1, 1])
@@ -359,7 +344,7 @@ def main():
                 st.image(image, caption="Uploaded Image", use_container_width=True)
                 
                 # Predict button
-                if st.button("Analyze Image", use_container_width=True, type="primary", help="Click to analyze the uploaded image"):
+                if st.button("🔬 Analyze Image", use_container_width=True, type="primary"):
                     with st.spinner("Analyzing image..."):
                         result = predict_image(image, model, scaler)
                     
@@ -381,9 +366,9 @@ def main():
                 }
                 
                 class_icons = {
-                    'GANAS': '<span style="color: #dc3545;"><i class="fas fa-exclamation-circle"></i></span>',
-                    'JINAK': '<span style="color: #ffc107;"><i class="fas fa-info-circle"></i></span>',
-                    'NON KANKER': '<span style="color: #28a745;"><i class="fas fa-check-circle"></i></span>'
+                    'GANAS': '🔴',
+                    'JINAK': '🟡',
+                    'NON KANKER': '🟢'
                 }
                 
                 predicted_class = result['class']
@@ -404,7 +389,7 @@ def main():
                 st.markdown("<br>", unsafe_allow_html=True)
                 
                 # Probability distribution
-                st.markdown("### <i class='fas fa-chart-pie'></i> Probability Distribution", unsafe_allow_html=True)
+                st.markdown("### 📊 Probability Distribution")
                 
                 probs = result['probabilities']
                 df_probs = pd.DataFrame({
@@ -435,14 +420,14 @@ def main():
                 st.plotly_chart(fig, use_container_width=True)
                 
                 # Detailed probabilities
-                st.markdown("### <i class='fas fa-clipboard-list'></i> Detailed Analysis", unsafe_allow_html=True)
+                st.markdown("### 📋 Detailed Analysis")
                 for class_name, prob in probs.items():
                     icon = class_icons[class_name]
                     st.markdown(f"**{icon} {class_name}**: {prob:.2f}%")
                     st.progress(prob / 100)
     
-    # TAB 2: Batch Processing
-    with tab2:
+    # ===== PAGE 2: Batch Processing =====
+    elif st.session_state.active_page == 'Batch Processing':
         st.markdown("### Batch Image Processing")
         st.info("📁 Upload multiple images for batch classification")
         
@@ -456,7 +441,7 @@ def main():
         if uploaded_files:
             st.write(f"**{len(uploaded_files)} images uploaded**")
             
-            if st.button("Process All Images", use_container_width=True, type="primary", help="Start batch processing"):
+            if st.button("🚀 Process All Images", use_container_width=True):
                 results = []
                 progress_bar = st.progress(0)
                 status_text = st.empty()
@@ -479,10 +464,10 @@ def main():
                     
                     progress_bar.progress((idx + 1) / len(uploaded_files))
                 
-                status_text.text("Processing complete!")
+                status_text.text("✅ Processing complete!")
                 
                 # Display results
-                st.markdown("### <i class='fas fa-table'></i> Batch Results", unsafe_allow_html=True)
+                st.markdown("### 📊 Batch Results")
                 df_results = pd.DataFrame(results)
                 st.dataframe(df_results, use_container_width=True)
                 
@@ -496,24 +481,24 @@ def main():
                 )
                 
                 # Summary statistics
-                st.markdown("### <i class='fas fa-chart-line'></i> Summary Statistics", unsafe_allow_html=True)
+                st.markdown("### 📈 Summary Statistics")
                 col1, col2, col3 = st.columns(3)
                 
                 with col1:
                     ganas_count = len(df_results[df_results['Prediction'] == 'GANAS'])
-                    st.metric("GANAS", ganas_count, help="Malignant cases")
+                    st.metric("🔴 GANAS", ganas_count)
                 
                 with col2:
                     jinak_count = len(df_results[df_results['Prediction'] == 'JINAK'])
-                    st.metric("JINAK", jinak_count, help="Benign cases")
+                    st.metric("🟡 JINAK", jinak_count)
                 
                 with col3:
                     non_kanker_count = len(df_results[df_results['Prediction'] == 'NON KANKER'])
-                    st.metric("NON KANKER", non_kanker_count, help="Non-cancer cases")
+                    st.metric("🟢 NON KANKER", non_kanker_count)
     
-    # TAB 3: Model Analysis
-    with tab3:
-        st.markdown("### <i class='fas fa-chart-bar'></i> Analisis Performa Model", unsafe_allow_html=True)
+    # ===== PAGE 3: Model Analysis =====
+    elif st.session_state.active_page == 'Model Analysis':
+        st.markdown("### 📊 Analisis Performa Model")
         
         # Load model metadata and info
         try:
@@ -546,28 +531,28 @@ def main():
                 categories = metadata.get('categories', ['GANAS', 'JINAK', 'NON KANKER'])
                 
                 # ========== 1. METRIK UTAMA ==========
-                st.markdown("#### <i class='fas fa-bullseye'></i> Ringkasan Performa Model", unsafe_allow_html=True)
+                st.markdown("#### 🎯 Ringkasan Performa Model")
                 col1, col2, col3, col4 = st.columns(4)
                 
                 with col1:
                     accuracy = metrics.get('Accuracy', 'N/A')
                     if accuracy != 'N/A' and '(' in accuracy:
                         acc_pct = accuracy.split('(')[1].replace('%)', '').strip()
-                        st.metric("Akurasi", f"{acc_pct}%", help="Overall accuracy")
+                        st.metric("🎯 Akurasi", f"{acc_pct}%")
                     else:
-                        st.metric("Akurasi", "N/A")
+                        st.metric("🎯 Akurasi", "N/A")
                 
                 with col2:
                     kappa = metrics.get("Cohen's Kappa", 'N/A')
-                    st.metric("Kappa Score", kappa, help="Cohen's Kappa coefficient")
+                    st.metric("📈 Kappa Score", kappa)
                 
                 with col3:
                     mcc = metrics.get('MCC', 'N/A')
-                    st.metric("MCC", mcc, help="Matthews Correlation Coefficient")
+                    st.metric("🔗 MCC", mcc)
                 
                 with col4:
                     roc_auc = metrics.get('ROC-AUC (Macro)', 'N/A')
-                    st.metric("ROC-AUC", roc_auc, help="Area Under ROC Curve")
+                    st.metric("📊 ROC-AUC", roc_auc)
                 
                 st.markdown("---")
                 
@@ -646,7 +631,7 @@ def main():
                     st.markdown("""
                     <div style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); 
                                 padding: 40px; border-radius: 10px; text-align: center; color: white;">
-                        <h2><i class="fas fa-exclamation-circle" style="color: #dc3545;"></i> GANAS</h2>
+                        <h2>🔴 GANAS</h2>
                         <p style="font-size: 18px; margin-top: 10px;">Malignant Cancer</p>
                         <p style="font-size: 16px; margin-top: 15px;"><b>100</b> gambar asli</p>
                         <p style="font-size: 16px;"><b>400</b> setelah augmentasi</p>
@@ -657,7 +642,7 @@ def main():
                     st.markdown("""
                     <div style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); 
                                 padding: 40px; border-radius: 10px; text-align: center; color: white;">
-                        <h2><i class="fas fa-info-circle" style="color: #ffc107;"></i> JINAK</h2>
+                        <h2>🟡 JINAK</h2>
                         <p style="font-size: 18px; margin-top: 10px;">Benign Tumor</p>
                         <p style="font-size: 16px; margin-top: 15px;"><b>100</b> gambar asli</p>
                         <p style="font-size: 16px;"><b>400</b> setelah augmentasi</p>
@@ -668,7 +653,7 @@ def main():
                     st.markdown("""
                     <div style="background: linear-gradient(135deg, #28a745 0%, #218838 100%); 
                                 padding: 40px; border-radius: 10px; text-align: center; color: white;">
-                        <h2><i class="fas fa-check-circle" style="color: #28a745;"></i> NON KANKER</h2>
+                        <h2>🟢 NON KANKER</h2>
                         <p style="font-size: 18px; margin-top: 10px;">Healthy Tissue</p>
                         <p style="font-size: 16px; margin-top: 15px;"><b>84</b> gambar asli</p>
                         <p style="font-size: 16px;"><b>336</b> setelah augmentasi</p>
@@ -723,7 +708,7 @@ def main():
                     }
                 
                 # ========== 4. PERFORMA PER KELAS ==========
-                st.markdown("#### <i class='fas fa-layer-group'></i> Analisis Performa per Kelas", unsafe_allow_html=True)
+                st.markdown("#### 📊 Analisis Performa per Kelas")
                 
                 # Create metrics dataframe
                 metrics_data = []
@@ -873,7 +858,7 @@ def main():
                         error_val = 100 - acc_val
                         
                         fig_acc = go.Figure(data=[go.Pie(
-                            labels=['Prediksi Benar', 'Prediksi Salah'],
+                            labels=['✅ Prediksi Benar', '❌ Prediksi Salah'],
                             values=[acc_val, error_val],
                             marker=dict(colors=['#28a745', '#dc3545']),
                             hole=0.5,
@@ -905,7 +890,7 @@ def main():
                 
                 with col1:
                     st.success(f"""
-                    **<i class="fas fa-trophy"></i> Model Performance**
+                    **✅ Model Performance**
                     - Akurasi: {accuracy}
                     - Kappa: {kappa}
                     - Status: {'Sangat Baik' if kappa != 'N/A' and float(kappa) > 0.6 else 'Baik'}
@@ -913,7 +898,7 @@ def main():
                 
                 with col2:
                     st.info(f"""
-                    **<i class="fas fa-database"></i> Dataset Info**
+                    **📊 Dataset Info**
                     - Original: {total_original} images
                     - Augmentasi: {augmentation}x
                     - Training: {training_samples}
@@ -922,7 +907,7 @@ def main():
                 
                 with col3:
                     st.warning("""
-                    **<i class="fas fa-lightbulb"></i> Rekomendasi**
+                    **🎯 Rekomendasi**
                     - Model siap digunakan
                     - Akurasi tinggi untuk riset
                     - Perlu validasi medis
@@ -939,9 +924,9 @@ def main():
         except Exception as e:
             st.error(f"❌ Error: {str(e)}")
     
-    # TAB 4: Information
-    with tab4:
-        st.markdown("### <i class='fas fa-info-circle'></i> Informasi Proyek", unsafe_allow_html=True)
+    # ===== PAGE 4: Information =====
+    elif st.session_state.active_page == 'Information':
+        st.markdown("### 📚 Informasi Proyek")
         
         # ========== HEADER PROJECT ==========
         st.markdown("""
@@ -957,22 +942,23 @@ def main():
         with st.container():
             st.markdown("""
 <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
-<h3 style="color: #667eea; margin-top: 0;"><i class="fas fa-book"></i> Latar Belakang</h3>
+<h3 style="color: #667eea; margin-top: 0;">📋 Latar Belakang</h3>
 <p style="text-align: justify; line-height: 1.8;">Kanker merupakan salah satu penyebab kematian tertinggi di dunia. Diagnosis dini sangat penting untuk meningkatkan peluang kesembuhan pasien. Analisis citra histopatologi adalah metode standar untuk mendeteksi kanker, namun proses manual memerlukan waktu lama dan keahlian khusus dari patolog. Sistem klasifikasi otomatis menggunakan machine learning dapat membantu mempercepat proses diagnosis dan memberikan second opinion yang objektif.</p>
 </div>
 """, unsafe_allow_html=True)
         
-        # ========== Tujuan & Rumusan Masalah ==========
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("### <i class='fas fa-bullseye'></i> Tujuan & Rumusan Masalah", unsafe_allow_html=True)
-        st.markdown("<br>", unsafe_allow_html=True)
+        # ========== About This System (preserved for compatibility)
+        st.markdown("""
+        
+        ## 🎯 Tujuan & Rumusan Masalah
+        """)
         
         col1, col2 = st.columns(2)
         
         with col1:
             st.markdown("""
 <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: 100%;">
-<h3 style="color: #667eea; margin-top: 0;"><i class="fas fa-bullseye"></i> Tujuan Penelitian</h3>
+<h3 style="color: #667eea; margin-top: 0;">🎯 Tujuan Penelitian</h3>
 <ul style="line-height: 2.0;"><li>Mengembangkan sistem klasifikasi otomatis untuk citra histopatologi</li><li>Mengimplementasikan algoritma SVM untuk deteksi kanker</li><li>Membedakan 3 kategori: GANAS, JINAK, dan NON KANKER</li><li>Mencapai akurasi tinggi untuk mendukung diagnosis medis</li></ul>
 </div>
 """, unsafe_allow_html=True)
@@ -980,7 +966,7 @@ def main():
         with col2:
             st.markdown("""
 <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: 100%;">
-<h3 style="color: #667eea; margin-top: 0;"><i class="fas fa-question-circle"></i> Rumusan Masalah</h3>
+<h3 style="color: #667eea; margin-top: 0;">❓ Rumusan Masalah</h3>
 <ul style="line-height: 2.0;"><li>Bagaimana mengklasifikasikan citra histopatologi secara otomatis?</li><li>Algoritma machine learning apa yang efektif untuk deteksi kanker?</li><li>Bagaimana meningkatkan akurasi dengan data terbatas?</li><li>Bagaimana mengimplementasikan sistem yang user-friendly?</li></ul>
 </div>
 """, unsafe_allow_html=True)
@@ -991,7 +977,7 @@ def main():
         with st.container():
             st.markdown("""
 <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
-<h3 style="color: #667eea; margin-top: 0;"><i class="fas fa-database"></i> Dataset</h3>
+<h3 style="color: #667eea; margin-top: 0;">📊 Dataset</h3>
 </div>
 """, unsafe_allow_html=True)
             
@@ -1000,7 +986,7 @@ def main():
             with col1:
                 st.markdown("""
 <div style="background: #dc3545; padding: 20px; border-radius: 10px; text-align: center; color: white;">
-<h2 style="margin: 0;"><i class="fas fa-exclamation-circle" style="color: #dc3545;"></i> GANAS</h2>
+<h2 style="margin: 0;">🔴 GANAS</h2>
 <p style="font-size: 16px; margin-top: 10px;">Malignant Cancer</p>
 <h3 style="margin-top: 15px;">100 gambar</h3>
 <p style="font-size: 14px;">Tumor ganas yang dapat menyebar</p>
@@ -1010,7 +996,7 @@ def main():
             with col2:
                 st.markdown("""
 <div style="background: #ffc107; padding: 20px; border-radius: 10px; text-align: center; color: white;">
-<h2 style="margin: 0;"><i class="fas fa-info-circle" style="color: #ffc107;"></i> JINAK</h2>
+<h2 style="margin: 0;">🟡 JINAK</h2>
 <p style="font-size: 16px; margin-top: 10px;">Benign Tumor</p>
 <h3 style="margin-top: 15px;">100 gambar</h3>
 <p style="font-size: 14px;">Tumor jinak non-kanker</p>
@@ -1020,7 +1006,7 @@ def main():
             with col3:
                 st.markdown("""
 <div style="background: #28a745; padding: 20px; border-radius: 10px; text-align: center; color: white;">
-<h2 style="margin: 0;"><i class="fas fa-check-circle" style="color: #28a745;"></i> NON KANKER</h2>
+<h2 style="margin: 0;">🟢 NON KANKER</h2>
 <p style="font-size: 16px; margin-top: 10px;">Healthy Tissue</p>
 <h3 style="margin-top: 15px;">84 gambar</h3>
 <p style="font-size: 14px;">Jaringan sehat normal</p>
@@ -1031,14 +1017,36 @@ def main():
         
         st.markdown("<br>", unsafe_allow_html=True)
         
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("### <i class='fas fa-cogs'></i> Metodologi & Technology Stack", unsafe_allow_html=True)
-        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("""
+        
+        ## 🔬 Metodologi & Technology Stack
+        
+        - **Algorithm**: Support Vector Machine (SVM) with Linear Kernel
+        - **Image Processing**: scikit-image
+        - **Framework**: Streamlit
+        - **Visualization**: Plotly, Matplotlib
+        - **Model Training**: scikit-learn
+        
+        ## � Model Specifications
+        
+        - **Input Size**: 224×224×3 RGB images
+        - **Features**: 150,528 features per image
+        - **Preprocessing**: 
+          - Automatic grayscale to RGB conversion
+          - Image normalization [0, 1]
+          - Standard scaling with StandardScaler
+        - **Training**: 
+          - Data augmentation (4x factor)
+          - Rotation, flip, brightness adjustments
+          - Class weight balancing
+        
+        ## 🚀 Cara Penggunaan Sistem
+        """)
         
         with st.container():
             st.markdown("""
 <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
-<h3 style="color: #667eea; margin-top: 0;"><i class="fas fa-cogs"></i> Metodologi</h3>
+<h3 style="color: #667eea; margin-top: 0;">🔬 Metodologi</h3>
 </div>
 """, unsafe_allow_html=True)
             
@@ -1046,13 +1054,13 @@ def main():
             
             with col1:
                 st.markdown("""
-                **1. Preprocessing:**
+                **1️⃣ Preprocessing:**
                 - Resize gambar ke 224×224×3
                 - Normalisasi piksel [0, 1]
                 - Konversi grayscale ke RGB
                 - Flatten menjadi vector 150,528 fitur
                 
-                **2. Data Augmentation:**
+                **2️⃣ Data Augmentation:**
                 - Faktor augmentasi: 4x
                 - Rotasi: ±30 derajat
                 - Horizontal & vertical flip
@@ -1061,13 +1069,13 @@ def main():
             
             with col2:
                 st.markdown("""
-                **3. Model Training:**
+                **3️⃣ Model Training:**
                 - Algoritma: Support Vector Machine (SVM)
                 - Kernel: Linear
                 - Split data: 80% training, 20% testing
                 - Scaling: StandardScaler
                 
-                **4. Evaluation:**
+                **4️⃣ Evaluation:**
                 - Akurasi, Precision, Recall, F1-Score
                 - Confusion Matrix
                 - ROC-AUC Score
@@ -1078,13 +1086,13 @@ def main():
         
         st.markdown("""
         
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("### <i class='fas fa-chart-line'></i> Hasil Penelitian", unsafe_allow_html=True)""")
+        ## 📈 Hasil Penelitian
+        """)
         
         with st.container():
             st.markdown("""
 <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
-<h3 style="color: #667eea; margin-top: 0;"><i class="fas fa-chart-line"></i> Hasil Penelitian</h3>
+<h3 style="color: #667eea; margin-top: 0;">📈 Hasil Penelitian</h3>
 </div>
 """, unsafe_allow_html=True)
             
@@ -1140,9 +1148,9 @@ def main():
         with st.container():
             st.markdown("""
 <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
-<h3 style="color: #667eea; margin-top: 0;"><i class="fas fa-check-circle"></i> Kesimpulan</h3>
+<h3 style="color: #667eea; margin-top: 0;">✅ Kesimpulan</h3>
 <ol style="line-height: 2.0; text-align: justify;"><li>Sistem berhasil mengklasifikasikan citra histopatologi dengan akurasi <b>75.44%</b></li><li>SVM dengan kernel linear efektif untuk klasifikasi 3 kategori kanker</li><li>Data augmentation 4x meningkatkan performa model secara signifikan</li><li>Kelas NON KANKER memiliki performa terbaik dengan recall 100%</li><li>Sistem dapat digunakan sebagai <i>screening tool</i> untuk mendukung diagnosis medis</li></ol>
-<h3 style="color: #667eea; margin-top: 30px;"><i class="fas fa-lightbulb"></i> Saran Pengembangan</h3>
+<h3 style="color: #667eea; margin-top: 30px;">🔮 Saran Pengembangan</h3>
 <ul style="line-height: 2.0; text-align: justify;"><li>Menambah jumlah dataset untuk meningkatkan generalisasi model</li><li>Mengeksplorasi algoritma deep learning (CNN) untuk akurasi lebih tinggi</li><li>Implementasi ensemble learning untuk kombinasi multiple models</li><li>Pengembangan fitur explainable AI untuk transparansi prediksi</li></ul>
 </div>
 """, unsafe_allow_html=True)
@@ -1155,7 +1163,7 @@ def main():
         with col1:
             st.markdown("""
 <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-<h3 style="color: #667eea; margin-top: 0;"><i class="fas fa-users"></i> Tim Pengembang</h3>
+<h3 style="color: #667eea; margin-top: 0;">👥 Tim Pengembang</h3>
 <p><b>Kelompok 4 - IF-10</b></p>
 <p>Proyek Sains Data</p>
 <p style="color: #64748b; font-size: 14px; margin-top: 15px;">Institut Teknologi Del<br>Fakultas Informatika dan Teknik Elektro</p>
@@ -1165,7 +1173,7 @@ def main():
         with col2:
             st.markdown("""
 <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-<h3 style="color: #667eea; margin-top: 0;"><i class="fas fa-tools"></i> Technology Stack</h3>
+<h3 style="color: #667eea; margin-top: 0;">🛠️ Technology Stack</h3>
 <ul style="line-height: 1.8;"><li><b>Machine Learning:</b> scikit-learn</li><li><b>Image Processing:</b> scikit-image</li><li><b>Web Framework:</b> Streamlit</li><li><b>Visualization:</b> Plotly, Matplotlib</li><li><b>Data Processing:</b> NumPy, Pandas</li></ul>
 </div>
 """, unsafe_allow_html=True)
@@ -1175,7 +1183,7 @@ def main():
         <div style="text-align: center; color: #64748b; padding: 20px;">
             <p style="font-size: 14px;">© 2026 Cancer Classification System - Kelompok 4 IF-10</p>
             <p style="font-size: 12px; margin-top: 10px;">
-                Developed with <i class="fas fa-heart" style="color: #e74c3c;"></i> using Python & Streamlit | For Educational & Research Purposes
+                Developed with ❤️ using Python & Streamlit | For Educational & Research Purposes
             </p>
         </div>
         """, unsafe_allow_html=True)

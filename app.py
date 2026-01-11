@@ -286,7 +286,7 @@ def main():
         """)
     
     # Main content
-    tab1, tab2, tab3 = st.tabs(["🔍 Image Classification", "📈 Batch Processing", "📚 Information"])
+    tab1, tab2, tab3, tab4 = st.tabs(["🔍 Image Classification", "📈 Batch Processing", "📊 Model Analysis", "📚 Information"])
     
     # TAB 1: Single Image Classification
     with tab1:
@@ -459,8 +459,298 @@ def main():
                     non_kanker_count = len(df_results[df_results['Prediction'] == 'NON KANKER'])
                     st.metric("🟢 NON KANKER", non_kanker_count)
     
-    # TAB 3: Information
+    # TAB 3: Model Analysis
     with tab3:
+        st.markdown("### 📊 Model Performance Analysis")
+        
+        # Load model metadata and info
+        try:
+            metadata_files = [f for f in os.listdir('.') if f.startswith('cancer_model_metadata_') and f.endswith('.pkl')]
+            info_files = [f for f in os.listdir('.') if f.startswith('cancer_model_info_') and f.endswith('.txt')]
+            
+            if metadata_files and info_files:
+                # Load metadata
+                import pickle
+                metadata_file = sorted(metadata_files)[-1]
+                with open(metadata_file, 'rb') as f:
+                    metadata = pickle.load(f)
+                
+                # Load info text
+                info_file = sorted(info_files)[-1]
+                with open(info_file, 'r', encoding='utf-8') as f:
+                    model_info = f.read()
+                
+                # Parse metrics from info file
+                lines = model_info.split('\n')
+                metrics = {}
+                for line in lines:
+                    if ':' in line:
+                        parts = line.split(':', 1)
+                        if len(parts) == 2:
+                            key = parts[0].strip()
+                            value = parts[1].strip()
+                            metrics[key] = value
+                
+                # Display Overview
+                st.markdown("#### 🎯 Model Overview")
+                col1, col2, col3, col4 = st.columns(4)
+                
+                with col1:
+                    accuracy = metrics.get('Accuracy', 'N/A')
+                    if accuracy != 'N/A':
+                        acc_val = float(accuracy.split('(')[1].replace('%)', '').strip()) if '(' in accuracy else 0
+                        st.metric("🎯 Accuracy", accuracy.split('(')[0].strip(), f"{acc_val:.1f}%")
+                    else:
+                        st.metric("🎯 Accuracy", "N/A")
+                
+                with col2:
+                    training_samples = metrics.get('Training Samples', 'N/A')
+                    st.metric("📊 Training Samples", training_samples)
+                
+                with col3:
+                    test_samples = metrics.get('Test Samples', 'N/A')
+                    st.metric("✅ Test Samples", test_samples)
+                
+                with col4:
+                    augmentation = metadata.get('augmentation_factor', 'N/A')
+                    st.metric("🔄 Augmentation", f"{augmentation}x")
+                
+                st.markdown("---")
+                
+                # Dataset Distribution
+                st.markdown("#### 📈 Dataset Distribution")
+                categories = metadata.get('categories', ['GANAS', 'JINAK', 'NON KANKER'])
+                
+                # Create sample distribution (from metadata)
+                training_samples_count = int(training_samples.replace(',', '')) if training_samples != 'N/A' else 1000
+                
+                # Estimate per-class distribution (assuming balanced after augmentation)
+                samples_per_class = training_samples_count // len(categories)
+                
+                fig_dist = go.Figure(data=[
+                    go.Bar(
+                        x=categories,
+                        y=[samples_per_class] * len(categories),
+                        marker=dict(
+                            color=['#dc3545', '#ffc107', '#28a745'],
+                            line=dict(color='black', width=2)
+                        ),
+                        text=[samples_per_class] * len(categories),
+                        textposition='auto',
+                    )
+                ])
+                
+                fig_dist.update_layout(
+                    title="Training Samples per Class (After Augmentation)",
+                    xaxis_title="Class",
+                    yaxis_title="Number of Samples",
+                    height=400,
+                    showlegend=False
+                )
+                
+                st.plotly_chart(fig_dist, use_container_width=True)
+                
+                st.markdown("---")
+                
+                # Per-Class Performance Metrics
+                st.markdown("#### 📊 Per-Class Performance Metrics")
+                
+                # Parse per-class metrics from info file
+                per_class_metrics = {}
+                current_class = None
+                
+                for line in lines:
+                    line = line.strip()
+                    if line in categories:
+                        current_class = line
+                        per_class_metrics[current_class] = {}
+                    elif current_class and ':' in line and any(metric in line for metric in ['Precision', 'Recall', 'F1-Score', 'ROC-AUC']):
+                        parts = line.split(':', 1)
+                        if len(parts) == 2:
+                            metric_name = parts[0].strip()
+                            metric_value = float(parts[1].strip())
+                            per_class_metrics[current_class][metric_name] = metric_value
+                
+                if per_class_metrics:
+                    # Create dataframe for visualization
+                    metrics_data = []
+                    for cat in categories:
+                        if cat in per_class_metrics:
+                            metrics_data.append({
+                                'Class': cat,
+                                'Precision': per_class_metrics[cat].get('Precision', 0),
+                                'Recall': per_class_metrics[cat].get('Recall', 0),
+                                'F1-Score': per_class_metrics[cat].get('F1-Score', 0),
+                                'ROC-AUC': per_class_metrics[cat].get('ROC-AUC', 0)
+                            })
+                    
+                    df_metrics = pd.DataFrame(metrics_data)
+                    
+                    # Display as table
+                    st.dataframe(
+                        df_metrics.style.format({
+                            'Precision': '{:.4f}',
+                            'Recall': '{:.4f}',
+                            'F1-Score': '{:.4f}',
+                            'ROC-AUC': '{:.4f}'
+                        }).background_gradient(cmap='RdYlGn', subset=['Precision', 'Recall', 'F1-Score', 'ROC-AUC']),
+                        use_container_width=True
+                    )
+                    
+                    # Visualization
+                    col1, col2 = st.columns(2)
+                    
+                    with col1:
+                        # Bar chart for Precision, Recall, F1
+                        fig_prf = go.Figure()
+                        
+                        fig_prf.add_trace(go.Bar(
+                            name='Precision',
+                            x=df_metrics['Class'],
+                            y=df_metrics['Precision'],
+                            marker_color='#FF6B6B'
+                        ))
+                        
+                        fig_prf.add_trace(go.Bar(
+                            name='Recall',
+                            x=df_metrics['Class'],
+                            y=df_metrics['Recall'],
+                            marker_color='#4ECDC4'
+                        ))
+                        
+                        fig_prf.add_trace(go.Bar(
+                            name='F1-Score',
+                            x=df_metrics['Class'],
+                            y=df_metrics['F1-Score'],
+                            marker_color='#45B7D1'
+                        ))
+                        
+                        fig_prf.update_layout(
+                            title="Precision, Recall & F1-Score Comparison",
+                            xaxis_title="Class",
+                            yaxis_title="Score",
+                            barmode='group',
+                            height=400,
+                            yaxis=dict(range=[0, 1])
+                        )
+                        
+                        st.plotly_chart(fig_prf, use_container_width=True)
+                    
+                    with col2:
+                        # ROC-AUC bar chart
+                        fig_roc = go.Figure(data=[
+                            go.Bar(
+                                x=df_metrics['Class'],
+                                y=df_metrics['ROC-AUC'],
+                                marker=dict(
+                                    color=df_metrics['ROC-AUC'],
+                                    colorscale='RdYlGn',
+                                    showscale=True,
+                                    line=dict(color='black', width=2)
+                                ),
+                                text=df_metrics['ROC-AUC'].apply(lambda x: f'{x:.3f}'),
+                                textposition='auto',
+                            )
+                        ])
+                        
+                        fig_roc.update_layout(
+                            title="ROC-AUC Score per Class",
+                            xaxis_title="Class",
+                            yaxis_title="ROC-AUC Score",
+                            height=400,
+                            yaxis=dict(range=[0, 1])
+                        )
+                        
+                        st.plotly_chart(fig_roc, use_container_width=True)
+                
+                st.markdown("---")
+                
+                # Advanced Metrics
+                st.markdown("#### 🎯 Advanced Statistical Metrics")
+                
+                col1, col2, col3 = st.columns(3)
+                
+                with col1:
+                    kappa = metrics.get("Cohen's Kappa", 'N/A')
+                    st.metric("Cohen's Kappa", kappa)
+                    st.caption("Measures inter-rater reliability (0.6-0.8 = Good)")
+                
+                with col2:
+                    mcc = metrics.get('MCC', 'N/A')
+                    st.metric("Matthews Corr. Coef.", mcc)
+                    st.caption("Correlation between predicted & actual (-1 to 1)")
+                
+                with col3:
+                    roc_auc = metrics.get('ROC-AUC (Macro)', 'N/A')
+                    st.metric("Macro ROC-AUC", roc_auc)
+                    st.caption("Overall model discrimination ability")
+                
+                st.markdown("---")
+                
+                # Model Configuration
+                st.markdown("#### ⚙️ Model Configuration")
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.markdown("""
+                    **Architecture:**
+                    - Algorithm: Support Vector Machine (SVM)
+                    - Kernel: Linear
+                    - Probability Estimates: Enabled
+                    - Class Weight: Balanced
+                    
+                    **Input Processing:**
+                    - Image Size: 224 × 224 pixels
+                    - Color Channels: 3 (RGB)
+                    - Total Features: 150,528
+                    - Normalization: [0, 1] range
+                    """)
+                
+                with col2:
+                    st.markdown(f"""
+                    **Training Configuration:**
+                    - Data Split: 80% Train / 20% Test
+                    - Random State: 77
+                    - Stratified Sampling: Yes
+                    - Augmentation Factor: {augmentation}x
+                    
+                    **Augmentation Techniques:**
+                    - Rotation: ±30 degrees
+                    - Horizontal Flip
+                    - Vertical Flip
+                    - Brightness Adjustment: ±20%
+                    """)
+                
+                st.markdown("---")
+                
+                # Full Training Report
+                with st.expander("📋 View Complete Training Report"):
+                    st.code(model_info, language='text')
+                
+            else:
+                st.warning("⚠️ Model training information not found.")
+                st.info("💡 The model metadata files are generated during training in the Jupyter notebook.")
+                
+                st.markdown("""
+                ### Expected Metrics Display:
+                
+                When model metadata is available, this page will show:
+                
+                - **Overall Metrics**: Accuracy, Kappa, MCC, ROC-AUC
+                - **Dataset Distribution**: Training/test split visualization
+                - **Per-Class Performance**: Precision, Recall, F1-Score, ROC-AUC for each class
+                - **Advanced Statistics**: Cohen's Kappa, Matthews Correlation Coefficient
+                - **Model Configuration**: Architecture and training parameters
+                - **Complete Training Report**: Full detailed metrics
+                """)
+                
+        except Exception as e:
+            st.error(f"Error loading model analysis: {str(e)}")
+            st.info("Please ensure model metadata files are available in the application directory.")
+    
+    # TAB 4: Information
+    with tab4:
         st.markdown("### 📚 System Documentation")
         
         st.markdown("""

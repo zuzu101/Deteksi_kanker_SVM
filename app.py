@@ -904,18 +904,11 @@ def main():
         # ========== LATAR BELAKANG ==========
         with st.container():
             st.markdown("""
-<div style="background: white; padding: 25px; border-radius: 10px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
-    <h3 style="color: #667eea; margin-top: 0;">📋 Latar Belakang</h3>
-    <p style="text-align: justify; line-height: 1.8;">
-    Kanker merupakan salah satu penyebab kematian tertinggi di dunia. Diagnosis dini sangat penting 
-    untuk meningkatkan peluang kesembuhan pasien. Analisis citra histopatologi adalah metode standar 
-    untuk mendeteksi kanker, namun proses manual memerlukan waktu lama dan keahlian khusus dari 
-    patolog. Sistem klasifikasi otomatis menggunakan machine learning dapat membantu mempercepat 
-    proses diagnosis dan memberikan second opinion yang objektif.
-    </p>
+<div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+<h3 style="color: #667eea; margin-top: 0;">📋 Latar Belakang</h3>
+<p style="text-align: justify; line-height: 1.8;">Kanker merupakan salah satu penyebab kematian tertinggi di dunia. Diagnosis dini sangat penting untuk meningkatkan peluang kesembuhan pasien. Analisis citra histopatologi adalah metode standar untuk mendeteksi kanker, namun proses manual memerlukan waktu lama dan keahlian khusus dari patolog. Sistem klasifikasi otomatis menggunakan machine learning dapat membantu mempercepat proses diagnosis dan memberikan second opinion yang objektif.</p>
 </div>
-            """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
         
         # ========== About This System (preserved for compatibility)
         st.markdown("""
@@ -927,31 +920,19 @@ def main():
         
         with col1:
             st.markdown("""
-<div style="background: white; padding: 25px; border-radius: 10px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: 100%;">
-    <h3 style="color: #667eea; margin-top: 0;">🎯 Tujuan Penelitian</h3>
-    <ul style="line-height: 2.0;">
-        <li>Mengembangkan sistem klasifikasi otomatis untuk citra histopatologi</li>
-        <li>Mengimplementasikan algoritma SVM untuk deteksi kanker</li>
-        <li>Membedakan 3 kategori: GANAS, JINAK, dan NON KANKER</li>
-        <li>Mencapai akurasi tinggi untuk mendukung diagnosis medis</li>
-    </ul>
+<div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: 100%;">
+<h3 style="color: #667eea; margin-top: 0;">🎯 Tujuan Penelitian</h3>
+<ul style="line-height: 2.0;"><li>Mengembangkan sistem klasifikasi otomatis untuk citra histopatologi</li><li>Mengimplementasikan algoritma SVM untuk deteksi kanker</li><li>Membedakan 3 kategori: GANAS, JINAK, dan NON KANKER</li><li>Mencapai akurasi tinggi untuk mendukung diagnosis medis</li></ul>
 </div>
-            """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
         
         with col2:
             st.markdown("""
-<div style="background: white; padding: 25px; border-radius: 10px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: 100%;">
-    <h3 style="color: #667eea; margin-top: 0;">❓ Rumusan Masalah</h3>
-    <ul style="line-height: 2.0;">
-        <li>Bagaimana mengklasifikasikan citra histopatologi secara otomatis?</li>
-        <li>Algoritma machine learning apa yang efektif untuk deteksi kanker?</li>
-        <li>Bagaimana meningkatkan akurasi dengan data terbatas?</li>
-        <li>Bagaimana mengimplementasikan sistem yang user-friendly?</li>
-    </ul>
+<div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: 100%;">
+<h3 style="color: #667eea; margin-top: 0;">❓ Rumusan Masalah</h3>
+<ul style="line-height: 2.0;"><li>Bagaimana mengklasifikasikan citra histopatologi secara otomatis?</li><li>Algoritma machine learning apa yang efektif untuk deteksi kanker?</li><li>Bagaimana meningkatkan akurasi dengan data terbatas?</li><li>Bagaimana mengimplementasikan sistem yang user-friendly?</li></ul>
 </div>
-            """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
         
         st.markdown("<br>", unsafe_allow_html=True)
         
@@ -961,43 +942,42 @@ def main():
         # Dataset cards
         with st.container():
             st.markdown("""
-<div style="background: white; padding: 25px; border-radius: 10px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
-    <h3 style="color: #667eea; margin-top: 0;">📊 Dataset</h3>
+<div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+<h3 style="color: #667eea; margin-top: 0;">📊 Dataset</h3>
 </div>
-            """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
             
             col1, col2, col3 = st.columns(3)
             
             with col1:
                 st.markdown("""
 <div style="background: #dc3545; padding: 20px; border-radius: 10px; text-align: center; color: white;">
-    <h2 style="margin: 0;">🔴 GANAS</h2>
-    <p style="font-size: 16px; margin-top: 10px;">Malignant Cancer</p>
-    <h3 style="margin-top: 15px;">100 gambar</h3>
-    <p style="font-size: 14px;">Tumor ganas yang dapat menyebar</p>
+<h2 style="margin: 0;">🔴 GANAS</h2>
+<p style="font-size: 16px; margin-top: 10px;">Malignant Cancer</p>
+<h3 style="margin-top: 15px;">100 gambar</h3>
+<p style="font-size: 14px;">Tumor ganas yang dapat menyebar</p>
 </div>
-                """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
             
             with col2:
                 st.markdown("""
 <div style="background: #ffc107; padding: 20px; border-radius: 10px; text-align: center; color: white;">
-    <h2 style="margin: 0;">🟡 JINAK</h2>
-    <p style="font-size: 16px; margin-top: 10px;">Benign Tumor</p>
-    <h3 style="margin-top: 15px;">100 gambar</h3>
-    <p style="font-size: 14px;">Tumor jinak non-kanker</p>
+<h2 style="margin: 0;">🟡 JINAK</h2>
+<p style="font-size: 16px; margin-top: 10px;">Benign Tumor</p>
+<h3 style="margin-top: 15px;">100 gambar</h3>
+<p style="font-size: 14px;">Tumor jinak non-kanker</p>
 </div>
-                """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
             
             with col3:
                 st.markdown("""
 <div style="background: #28a745; padding: 20px; border-radius: 10px; text-align: center; color: white;">
-    <h2 style="margin: 0;">🟢 NON KANKER</h2>
-    <p style="font-size: 16px; margin-top: 10px;">Healthy Tissue</p>
-    <h3 style="margin-top: 15px;">84 gambar</h3>
-    <p style="font-size: 14px;">Jaringan sehat normal</p>
+<h2 style="margin: 0;">🟢 NON KANKER</h2>
+<p style="font-size: 16px; margin-top: 10px;">Healthy Tissue</p>
+<h3 style="margin-top: 15px;">84 gambar</h3>
+<p style="font-size: 14px;">Jaringan sehat normal</p>
 </div>
-                """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
             
             st.info("**Total Dataset**: 284 gambar histopatologi dengan resolusi 224×224×3 piksel")
         
@@ -1031,11 +1011,10 @@ def main():
         
         with st.container():
             st.markdown("""
-<div style="background: white; padding: 25px; border-radius: 10px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
-    <h3 style="color: #667eea; margin-top: 0;">🔬 Metodologi</h3>
+<div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+<h3 style="color: #667eea; margin-top: 0;">🔬 Metodologi</h3>
 </div>
-            """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
             
             col1, col2 = st.columns(2)
             
@@ -1078,53 +1057,48 @@ def main():
         
         with st.container():
             st.markdown("""
-<div style="background: white; padding: 25px; border-radius: 10px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
-    <h3 style="color: #667eea; margin-top: 0;">📈 Hasil Penelitian</h3>
+<div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+<h3 style="color: #667eea; margin-top: 0;">📈 Hasil Penelitian</h3>
 </div>
-            """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
             
             col1, col2, col3, col4 = st.columns(4)
             
             with col1:
                 st.markdown("""
-<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-            padding: 20px; border-radius: 10px; text-align: center; color: white;">
-    <h4 style="margin: 0;">Akurasi</h4>
-    <h2 style="margin: 10px 0;">75.44%</h2>
-    <p style="font-size: 12px;">Overall Accuracy</p>
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px; text-align: center; color: white;">
+<h4 style="margin: 0;">Akurasi</h4>
+<h2 style="margin: 10px 0;">75.44%</h2>
+<p style="font-size: 12px;">Overall Accuracy</p>
 </div>
-                """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
             
             with col2:
                 st.markdown("""
-<div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
-            padding: 20px; border-radius: 10px; text-align: center; color: white;">
-    <h4 style="margin: 0;">Kappa Score</h4>
-    <h2 style="margin: 10px 0;">0.6058</h2>
-    <p style="font-size: 12px;">Cohen's Kappa</p>
+<div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 20px; border-radius: 10px; text-align: center; color: white;">
+<h4 style="margin: 0;">Kappa Score</h4>
+<h2 style="margin: 10px 0;">0.6058</h2>
+<p style="font-size: 12px;">Cohen's Kappa</p>
 </div>
-                """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
             
             with col3:
                 st.markdown("""
-<div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); 
-            padding: 20px; border-radius: 10px; text-align: center; color: white;">
-    <h4 style="margin: 0;">MCC</h4>
-    <h2 style="margin: 10px 0;">0.6112</h2>
-    <p style="font-size: 12px;">Matthews Corr.</p>
+<div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 20px; border-radius: 10px; text-align: center; color: white;">
+<h4 style="margin: 0;">MCC</h4>
+<h2 style="margin: 10px 0;">0.6112</h2>
+<p style="font-size: 12px;">Matthews Corr.</p>
 </div>
-                """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
             
             with col4:
                 st.markdown("""
-<div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); 
-            padding: 20px; border-radius: 10px; text-align: center; color: white;">
-    <h4 style="margin: 0;">ROC-AUC</h4>
-    <h2 style="margin: 10px 0;">0.8742</h2>
-    <p style="font-size: 12px;">Macro Average</p>
+<div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); padding: 20px; border-radius: 10px; text-align: center; color: white;">
+<h4 style="margin: 0;">ROC-AUC</h4>
+<h2 style="margin: 10px 0;">0.8742</h2>
+<p style="font-size: 12px;">Macro Average</p>
 </div>
-                """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
             
             st.markdown("<br>", unsafe_allow_html=True)
             
@@ -1144,26 +1118,13 @@ def main():
         
         with st.container():
             st.markdown("""
-<div style="background: white; padding: 25px; border-radius: 10px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
-    <h3 style="color: #667eea; margin-top: 0;">✅ Kesimpulan</h3>
-    <ol style="line-height: 2.0; text-align: justify;">
-        <li>Sistem berhasil mengklasifikasikan citra histopatologi dengan akurasi <b>75.44%</b></li>
-        <li>SVM dengan kernel linear efektif untuk klasifikasi 3 kategori kanker</li>
-        <li>Data augmentation 4x meningkatkan performa model secara signifikan</li>
-        <li>Kelas NON KANKER memiliki performa terbaik dengan recall 100%</li>
-        <li>Sistem dapat digunakan sebagai <i>screening tool</i> untuk mendukung diagnosis medis</li>
-    </ol>
-    
-    <h3 style="color: #667eea; margin-top: 30px;">🔮 Saran Pengembangan</h3>
-    <ul style="line-height: 2.0; text-align: justify;">
-        <li>Menambah jumlah dataset untuk meningkatkan generalisasi model</li>
-        <li>Mengeksplorasi algoritma deep learning (CNN) untuk akurasi lebih tinggi</li>
-        <li>Implementasi ensemble learning untuk kombinasi multiple models</li>
-        <li>Pengembangan fitur explainable AI untuk transparansi prediksi</li>
-    </ul>
+<div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+<h3 style="color: #667eea; margin-top: 0;">✅ Kesimpulan</h3>
+<ol style="line-height: 2.0; text-align: justify;"><li>Sistem berhasil mengklasifikasikan citra histopatologi dengan akurasi <b>75.44%</b></li><li>SVM dengan kernel linear efektif untuk klasifikasi 3 kategori kanker</li><li>Data augmentation 4x meningkatkan performa model secara signifikan</li><li>Kelas NON KANKER memiliki performa terbaik dengan recall 100%</li><li>Sistem dapat digunakan sebagai <i>screening tool</i> untuk mendukung diagnosis medis</li></ol>
+<h3 style="color: #667eea; margin-top: 30px;">🔮 Saran Pengembangan</h3>
+<ul style="line-height: 2.0; text-align: justify;"><li>Menambah jumlah dataset untuk meningkatkan generalisasi model</li><li>Mengeksplorasi algoritma deep learning (CNN) untuk akurasi lebih tinggi</li><li>Implementasi ensemble learning untuk kombinasi multiple models</li><li>Pengembangan fitur explainable AI untuk transparansi prediksi</li></ul>
 </div>
-            """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
         
         st.markdown("<br>", unsafe_allow_html=True)
         
@@ -1172,32 +1133,21 @@ def main():
         
         with col1:
             st.markdown("""
-<div style="background: white; padding: 25px; border-radius: 10px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-    <h3 style="color: #667eea; margin-top: 0;">👥 Tim Pengembang</h3>
-    <p><b>Kelompok 4 - IF-10</b></p>
-    <p>Proyek Sains Data</p>
-    <p style="color: #64748b; font-size: 14px; margin-top: 15px;">
-    Institut Teknologi Del<br>
-    Fakultas Informatika dan Teknik Elektro
-    </p>
+<div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+<h3 style="color: #667eea; margin-top: 0;">👥 Tim Pengembang</h3>
+<p><b>Kelompok 4 - IF-10</b></p>
+<p>Proyek Sains Data</p>
+<p style="color: #64748b; font-size: 14px; margin-top: 15px;">Institut Teknologi Del<br>Fakultas Informatika dan Teknik Elektro</p>
 </div>
-            """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
         
         with col2:
             st.markdown("""
-<div style="background: white; padding: 25px; border-radius: 10px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-    <h3 style="color: #667eea; margin-top: 0;">🛠️ Technology Stack</h3>
-    <ul style="line-height: 1.8;">
-        <li><b>Machine Learning:</b> scikit-learn</li>
-        <li><b>Image Processing:</b> scikit-image</li>
-        <li><b>Web Framework:</b> Streamlit</li>
-        <li><b>Visualization:</b> Plotly, Matplotlib</li>
-        <li><b>Data Processing:</b> NumPy, Pandas</li>
-    </ul>
+<div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+<h3 style="color: #667eea; margin-top: 0;">🛠️ Technology Stack</h3>
+<ul style="line-height: 1.8;"><li><b>Machine Learning:</b> scikit-learn</li><li><b>Image Processing:</b> scikit-image</li><li><b>Web Framework:</b> Streamlit</li><li><b>Visualization:</b> Plotly, Matplotlib</li><li><b>Data Processing:</b> NumPy, Pandas</li></ul>
 </div>
-            """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
         
         st.markdown("---")
         st.markdown("""

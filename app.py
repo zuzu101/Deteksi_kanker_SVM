@@ -222,149 +222,74 @@ def predict_image(image, model, scaler):
 # MAIN APP
 # ===========================
 def main():
+    # Header
+    st.markdown("""
+    <div class="header-container">
+        <h1 class="header-title">🏥 Cancer Classification System</h1>
+        <p class="header-subtitle">Advanced AI-Powered Medical Image Analysis using Support Vector Machine</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     # Load model
     model, scaler, error = load_model_and_scaler()
     
     if error:
         st.error(f"⚠️ {error}")
-        st.info("💡 Please ensure the model files are available.")
+        st.info("💡 Please run the training notebook first to generate the model files.")
         st.stop()
     
-    # Sidebar Navigation
+    # Sidebar
     with st.sidebar:
         st.image("https://img.icons8.com/color/96/000000/hospital-3.png", width=80)
-        st.markdown("## 🏥 Cancer Classifier")
-        st.markdown("---")
+        st.markdown("### 📊 System Information")
         
-        page = st.radio(
-            "📋 Navigation",
-            ["🏠 Dashboard", "🔍 Image Classification", "📊 Batch Processing", "📈 Model Evaluation"],
-            label_visibility="collapsed"
-        )
+        st.markdown("""
+        <div class="stat-box">
+            <p class="stat-label">Model Type</p>
+            <p class="stat-value">SVM Linear</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="stat-box">
+            <p class="stat-label">Image Resolution</p>
+            <p class="stat-value">224×224×3</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="stat-box">
+            <p class="stat-label">Classes</p>
+            <p class="stat-value">3 Types</p>
+        </div>
+        """, unsafe_allow_html=True)
         
         st.markdown("---")
         st.markdown("### 🎯 Classification Types")
         st.markdown("""
-        - 🔴 **GANAS** - Malignant
-        - 🟡 **JINAK** - Benign
-        - 🟢 **NON KANKER** - Healthy
+        - 🔴 **GANAS** - Malignant (Cancerous)
+        - 🟡 **JINAK** - Benign (Non-cancerous tumor)
+        - 🟢 **NON KANKER** - Non-cancer (Healthy)
         """)
         
         st.markdown("---")
-        st.markdown("### 📊 Model Info")
+        st.markdown("### ℹ️ About")
         st.markdown("""
-        **Algorithm**: SVM Linear  
-        **Resolution**: 224×224×3  
-        **Features**: 150,528  
-        **Classes**: 3 Types
-        """)
-    
-    # ==================== PAGE 1: DASHBOARD ====================
-    if page == "🏠 Dashboard":
-        st.markdown("""
-        <div class="header-container">
-            <h1 class="header-title">🏥 Cancer Classification System</h1>
-            <p class="header-subtitle">Advanced AI-Powered Medical Image Analysis</p>
-        </div>
-        """, unsafe_allow_html=True)
+        This system uses **Support Vector Machine (SVM)** 
+        with linear kernel trained on medical imaging dataset.
         
-        st.markdown("### 👋 Welcome to Cancer Classification System")
-        st.markdown("""
-        This system uses **Support Vector Machine (SVM)** with linear kernel 
-        to classify histopathology images into three categories.
-        """)
-        
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            st.markdown("""
-            <div class="result-card">
-                <h3 style="color: #dc3545;">🔴 GANAS</h3>
-                <p><strong>Malignant Cancer</strong></p>
-                <p>Cancerous tumors that can spread to other parts of the body.</p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col2:
-            st.markdown("""
-            <div class="result-card">
-                <h3 style="color: #ffc107;">🟡 JINAK</h3>
-                <p><strong>Benign Tumor</strong></p>
-                <p>Non-cancerous tumors that do not spread.</p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col3:
-            st.markdown("""
-            <div class="result-card">
-                <h3 style="color: #28a745;">🟢 NON KANKER</h3>
-                <p><strong>Healthy Tissue</strong></p>
-                <p>Normal, healthy tissue with no abnormalities.</p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        st.markdown("---")
-        
-        st.markdown("### 🚀 Quick Start Guide")
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("""
-            **🔍 Single Image Classification:**
-            1. Go to "Image Classification" page
-            2. Upload a medical image (JPG/PNG)
-            3. Click "Analyze Image"
-            4. View prediction & confidence scores
-            """)
-        
-        with col2:
-            st.markdown("""
-            **📊 Batch Processing:**
-            1. Go to "Batch Processing" page
-            2. Upload multiple images at once
-            3. Click "Process All Images"
-            4. Download results as CSV file
-            """)
-        
-        st.markdown("---")
-        
-        st.markdown("### 🔬 Technology Stack")
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("""
-            **Machine Learning:**
-            - Algorithm: SVM with Linear Kernel
-            - Training: scikit-learn
-            - Image Processing: scikit-image
-            - Data Augmentation: 4x factor
-            """)
-        
-        with col2:
-            st.markdown("""
-            **Preprocessing:**
-            - Input: 224×224×3 RGB images
-            - Normalization: [0, 1] range
-            - Scaling: StandardScaler
-            - Auto grayscale conversion
-            """)
-        
-        st.markdown("---")
-        
-        st.warning("""
-        ⚠️ **Disclaimer**: This system is for research and educational purposes only. 
-        Always consult with qualified medical professionals for proper diagnosis and treatment.
+        **Features:**
+        - Real-time prediction
+        - Confidence scoring
+        - Professional visualization
+        - High accuracy classification
         """)
     
-    # ==================== PAGE 2: IMAGE CLASSIFICATION ====================
-    elif page == "🔍 Image Classification":
-        st.markdown("""
-        <div class="header-container">
-            <h1 class="header-title">🔍 Image Classification</h1>
-            <p class="header-subtitle">Upload and analyze single medical image</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
+    # Main content
+    tab1, tab2, tab3 = st.tabs(["🔍 Image Classification", "📈 Batch Processing", "📚 Information"])
+    
+    # TAB 1: Single Image Classification
+    with tab1:
         st.markdown("### Upload Medical Image for Analysis")
         
         col1, col2 = st.columns([1, 1])
@@ -464,16 +389,9 @@ def main():
                     st.markdown(f"**{icon} {class_name}**: {prob:.2f}%")
                     st.progress(prob / 100)
     
-    # ==================== PAGE 3: BATCH PROCESSING ====================
-    elif page == "📊 Batch Processing":
-        st.markdown("""
-        <div class="header-container">
-            <h1 class="header-title">📊 Batch Processing</h1>
-            <p class="header-subtitle">Process multiple images at once</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("### Upload Multiple Images")
+    # TAB 2: Batch Processing
+    with tab2:
+        st.markdown("### Batch Image Processing")
         st.info("📁 Upload multiple images for batch classification")
         
         uploaded_files = st.file_uploader(
@@ -541,169 +459,74 @@ def main():
                     non_kanker_count = len(df_results[df_results['Prediction'] == 'NON KANKER'])
                     st.metric("🟢 NON KANKER", non_kanker_count)
     
-    # ==================== PAGE 4: MODEL EVALUATION ====================
-    elif page == "📈 Model Evaluation":
+    # TAB 3: Information
+    with tab3:
+        st.markdown("### 📚 System Documentation")
+        
         st.markdown("""
-        <div class="header-container">
-            <h1 class="header-title">📈 Model Evaluation</h1>
-            <p class="header-subtitle">Training Results & Performance Metrics</p>
+        ## 🎯 About This System
+        
+        This **Cancer Classification System** uses advanced Machine Learning techniques 
+        to classify medical images into three categories:
+        
+        - **GANAS (Malignant)**: Cancerous tumors that can spread
+        - **JINAK (Benign)**: Non-cancerous tumors
+        - **NON KANKER (Non-cancer)**: Healthy tissue
+        
+        ## 🔬 Technology Stack
+        
+        - **Algorithm**: Support Vector Machine (SVM) with Linear Kernel
+        - **Image Processing**: scikit-image
+        - **Framework**: Streamlit
+        - **Visualization**: Plotly, Matplotlib
+        - **Model Training**: scikit-learn
+        
+        ## � Model Specifications
+        
+        - **Input Size**: 224×224×3 RGB images
+        - **Features**: 150,528 features per image
+        - **Preprocessing**: 
+          - Automatic grayscale to RGB conversion
+          - Image normalization [0, 1]
+          - Standard scaling with StandardScaler
+        - **Training**: 
+          - Data augmentation (4x factor)
+          - Rotation, flip, brightness adjustments
+          - Class weight balancing
+        
+        ## 🚀 How to Use
+        
+        ### Single Image Classification:
+        1. Go to the "Image Classification" tab
+        2. Upload a medical image (JPG, PNG)
+        3. Click "Analyze Image"
+        4. View prediction results and confidence scores
+        
+        ### Batch Processing:
+        1. Go to the "Batch Processing" tab
+        2. Upload multiple images
+        3. Click "Process All Images"
+        4. Download results as CSV
+        
+        ## ⚠️ Important Notes
+        
+        - This system is for **research and educational purposes**
+        - Always consult with medical professionals for diagnosis
+        - Results should be verified by qualified healthcare providers
+        - Not intended as a replacement for professional medical advice
+        
+        ## 📞 Support
+        
+        For questions or issues, please contact the development team.
+        """)
+        
+        st.markdown("---")
+        st.markdown("""
+        <div style="text-align: center; color: #64748b;">
+            <p>Developed with ❤️ using Python & Streamlit</p>
+            <p>© 2026 Cancer Classification System</p>
         </div>
         """, unsafe_allow_html=True)
-        
-        # Load model info if exists
-        info_files = [f for f in os.listdir('.') if f.startswith('cancer_model_info_') and f.endswith('.txt')]
-        
-        if info_files:
-            info_file = sorted(info_files)[-1]
-            
-            st.markdown("### 📄 Model Training Information")
-            
-            with open(info_file, 'r') as f:
-                model_info = f.read()
-            
-            # Parse info file
-            lines = model_info.split('\n')
-            
-            # Display key metrics
-            col1, col2, col3, col4 = st.columns(4)
-            
-            for line in lines:
-                if 'Training Accuracy' in line:
-                    acc = line.split(':')[1].strip()
-                    with col1:
-                        st.metric("🎯 Training Accuracy", acc)
-                elif 'Testing Accuracy' in line:
-                    test_acc = line.split(':')[1].strip()
-                    with col2:
-                        st.metric("✅ Testing Accuracy", test_acc)
-                elif 'Total Images' in line:
-                    total = line.split(':')[1].strip()
-                    with col3:
-                        st.metric("📊 Total Images", total)
-                elif 'Training Samples' in line:
-                    train_samples = line.split(':')[1].strip()
-                    with col4:
-                        st.metric("🔢 Training Samples", train_samples)
-            
-            st.markdown("---")
-            
-            # Display full info
-            with st.expander("📋 View Complete Training Report"):
-                st.code(model_info)
-            
-            st.markdown("---")
-            
-            # Model specifications
-            st.markdown("### 🔬 Model Specifications")
-            
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                st.markdown("""
-                **Architecture:**
-                - Algorithm: Support Vector Machine (SVM)
-                - Kernel: Linear
-                - Probability Estimates: Enabled
-                - Class Weight: Balanced
-                
-                **Input Processing:**
-                - Image Size: 224 × 224 pixels
-                - Color Channels: 3 (RGB)
-                - Total Features: 150,528
-                - Normalization: [0, 1] range
-                """)
-            
-            with col2:
-                st.markdown("""
-                **Training Configuration:**
-                - Data Split: 80% Train / 20% Test
-                - Random State: 77
-                - Stratified Sampling: Yes
-                - Augmentation Factor: 4x
-                
-                **Augmentation Techniques:**
-                - Rotation: ±30 degrees
-                - Horizontal Flip
-                - Vertical Flip
-                - Brightness Adjustment: ±20%
-                """)
-            
-            st.markdown("---")
-            
-            # Classification categories
-            st.markdown("### 🎯 Classification Categories")
-            
-            col1, col2, col3 = st.columns(3)
-            
-            with col1:
-                st.markdown("""
-                <div style="background: #dc3545; color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
-                    <h2>🔴 GANAS</h2>
-                    <p><strong>Malignant Cancer</strong></p>
-                    <p>Cancerous tumors that can spread and invade other tissues</p>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            with col2:
-                st.markdown("""
-                <div style="background: #ffc107; color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
-                    <h2>🟡 JINAK</h2>
-                    <p><strong>Benign Tumor</strong></p>
-                    <p>Non-cancerous tumors that do not spread</p>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            with col3:
-                st.markdown("""
-                <div style="background: #28a745; color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
-                    <h2>🟢 NON KANKER</h2>
-                    <p><strong>Healthy Tissue</strong></p>
-                    <p>Normal tissue with no abnormalities</p>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            st.markdown("---")
-            
-            # Performance notes
-            st.markdown("### 📊 Performance Analysis")
-            
-            st.info("""
-            **Model Performance Highlights:**
-            - The model was trained on histopathology images with 4x data augmentation
-            - Standard scaling was applied to normalize feature values
-            - Class balancing ensures fair treatment of all categories
-            - Testing accuracy represents performance on unseen data
-            """)
-            
-            st.success("""
-            **Strengths:**
-            - High-resolution input (224×224) captures fine morphological details
-            - Data augmentation improves model generalization
-            - Linear kernel SVM provides fast inference speed
-            - Probability estimates enable confidence scoring
-            """)
-            
-            st.warning("""
-            **Limitations:**
-            - Performance depends on image quality and proper lighting
-            - Small dataset may limit generalization to diverse cases
-            - Not a replacement for professional medical diagnosis
-            - Should be used as a screening tool only
-            """)
-            
-        else:
-            st.warning("⚠️ Model training information file not found.")
-            st.info("💡 The model info file should be generated during training in the Jupyter notebook.")
-            
-            # Show sample metrics format
-            st.markdown("### 📊 Expected Metrics")
-            st.markdown("""
-            When the model is trained, you'll see:
-            - Training & Testing Accuracy
-            - Confusion Matrix
-            - Classification Report (Precision, Recall, F1-Score)
-            - Per-class Performance Metrics
-            """)
 
 # ===========================
 # RUN APP

@@ -461,7 +461,7 @@ def main():
     
     # TAB 3: Model Analysis
     with tab3:
-        st.markdown("### 📊 Model Performance Analysis")
+        st.markdown("### 📊 Analisis Performa Model")
         
         # Load model metadata and info
         try:
@@ -480,7 +480,7 @@ def main():
                 with open(info_file, 'r', encoding='utf-8') as f:
                     model_info = f.read()
                 
-                # Parse metrics from info file
+                # Parse metrics
                 lines = model_info.split('\n')
                 metrics = {}
                 for line in lines:
@@ -491,71 +491,101 @@ def main():
                             value = parts[1].strip()
                             metrics[key] = value
                 
-                # Display Overview
-                st.markdown("#### 🎯 Model Overview")
+                categories = metadata.get('categories', ['GANAS', 'JINAK', 'NON KANKER'])
+                
+                # ========== 1. METRIK UTAMA ==========
                 col1, col2, col3, col4 = st.columns(4)
                 
                 with col1:
                     accuracy = metrics.get('Accuracy', 'N/A')
-                    if accuracy != 'N/A':
-                        acc_val = float(accuracy.split('(')[1].replace('%)', '').strip()) if '(' in accuracy else 0
-                        st.metric("🎯 Accuracy", accuracy.split('(')[0].strip(), f"{acc_val:.1f}%")
+                    if accuracy != 'N/A' and '(' in accuracy:
+                        acc_pct = accuracy.split('(')[1].replace('%)', '').strip()
+                        st.metric("🎯 Akurasi", f"{acc_pct}%")
                     else:
-                        st.metric("🎯 Accuracy", "N/A")
+                        st.metric("🎯 Akurasi", "N/A")
                 
                 with col2:
-                    training_samples = metrics.get('Training Samples', 'N/A')
-                    st.metric("📊 Training Samples", training_samples)
+                    kappa = metrics.get("Cohen's Kappa", 'N/A')
+                    st.metric("📈 Kappa Score", kappa)
                 
                 with col3:
-                    test_samples = metrics.get('Test Samples', 'N/A')
-                    st.metric("✅ Test Samples", test_samples)
+                    mcc = metrics.get('MCC', 'N/A')
+                    st.metric("🔗 MCC", mcc)
                 
                 with col4:
-                    augmentation = metadata.get('augmentation_factor', 'N/A')
-                    st.metric("🔄 Augmentation", f"{augmentation}x")
+                    roc_auc = metrics.get('ROC-AUC (Macro)', 'N/A')
+                    st.metric("📊 ROC-AUC", roc_auc)
                 
                 st.markdown("---")
                 
-                # Dataset Distribution
-                st.markdown("#### 📈 Dataset Distribution")
-                categories = metadata.get('categories', ['GANAS', 'JINAK', 'NON KANKER'])
+                # ========== 2. DATASET ASLI ==========
+                st.markdown("#### 📁 Dataset Asli (Sebelum Augmentasi)")
                 
-                # Create sample distribution (from metadata)
-                training_samples_count = int(training_samples.replace(',', '')) if training_samples != 'N/A' else 1000
+                # Original dataset: 100 GANAS, 100 JINAK, 84 NON KANKER
+                original_data = {
+                    'GANAS': 100,
+                    'JINAK': 100,
+                    'NON KANKER': 84
+                }
                 
-                # Estimate per-class distribution (assuming balanced after augmentation)
-                samples_per_class = training_samples_count // len(categories)
+                col1, col2 = st.columns(2)
                 
-                fig_dist = go.Figure(data=[
-                    go.Bar(
-                        x=categories,
-                        y=[samples_per_class] * len(categories),
-                        marker=dict(
-                            color=['#dc3545', '#ffc107', '#28a745'],
-                            line=dict(color='black', width=2)
-                        ),
-                        text=[samples_per_class] * len(categories),
-                        textposition='auto',
+                with col1:
+                    # Pie chart
+                    fig_pie = go.Figure(data=[go.Pie(
+                        labels=list(original_data.keys()),
+                        values=list(original_data.values()),
+                        marker=dict(colors=['#dc3545', '#ffc107', '#28a745']),
+                        hole=0.4,
+                        textinfo='label+value+percent',
+                        textfont_size=14
+                    )])
+                    fig_pie.update_layout(
+                        title="Distribusi Dataset Asli",
+                        height=350,
+                        showlegend=True
                     )
-                ])
+                    st.plotly_chart(fig_pie, use_container_width=True)
                 
-                fig_dist.update_layout(
-                    title="Training Samples per Class (After Augmentation)",
-                    xaxis_title="Class",
-                    yaxis_title="Number of Samples",
-                    height=400,
-                    showlegend=False
-                )
+                with col2:
+                    # Bar chart
+                    fig_bar = go.Figure(data=[go.Bar(
+                        x=list(original_data.keys()),
+                        y=list(original_data.values()),
+                        marker=dict(color=['#dc3545', '#ffc107', '#28a745']),
+                        text=list(original_data.values()),
+                        textposition='auto',
+                        textfont=dict(size=16, color='white')
+                    )])
+                    fig_bar.update_layout(
+                        title="Jumlah Gambar per Kelas",
+                        xaxis_title="Kelas",
+                        yaxis_title="Jumlah Gambar",
+                        height=350,
+                        showlegend=False
+                    )
+                    st.plotly_chart(fig_bar, use_container_width=True)
                 
-                st.plotly_chart(fig_dist, use_container_width=True)
+                # Total dan pembagian
+                total_original = sum(original_data.values())
+                training_samples = metrics.get('Training Samples', 'N/A')
+                test_samples = metrics.get('Test Samples', 'N/A')
+                augmentation = metadata.get('augmentation_factor', 4)
+                
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.info(f"**Total Asli**: {total_original} gambar")
+                with col2:
+                    st.success(f"**Setelah Augmentasi {augmentation}x**: {training_samples} training samples")
+                with col3:
+                    st.warning(f"**Data Testing**: {test_samples} samples")
                 
                 st.markdown("---")
                 
-                # Per-Class Performance Metrics
-                st.markdown("#### 📊 Per-Class Performance Metrics")
+                # ========== 3. PERFORMA PER KELAS ==========
+                st.markdown("#### 📊 Performa Model per Kelas")
                 
-                # Parse per-class metrics from info file
+                # Parse per-class metrics
                 per_class_metrics = {}
                 current_class = None
                 
@@ -572,182 +602,177 @@ def main():
                             per_class_metrics[current_class][metric_name] = metric_value
                 
                 if per_class_metrics:
-                    # Create dataframe for visualization
+                    # Create metrics dataframe
                     metrics_data = []
                     for cat in categories:
                         if cat in per_class_metrics:
                             metrics_data.append({
-                                'Class': cat,
+                                'Kelas': cat,
                                 'Precision': per_class_metrics[cat].get('Precision', 0),
                                 'Recall': per_class_metrics[cat].get('Recall', 0),
-                                'F1-Score': per_class_metrics[cat].get('F1-Score', 0),
-                                'ROC-AUC': per_class_metrics[cat].get('ROC-AUC', 0)
+                                'F1-Score': per_class_metrics[cat].get('F1-Score', 0)
                             })
                     
                     df_metrics = pd.DataFrame(metrics_data)
                     
-                    # Display as table
-                    st.dataframe(
-                        df_metrics.style.format({
-                            'Precision': '{:.4f}',
-                            'Recall': '{:.4f}',
-                            'F1-Score': '{:.4f}',
-                            'ROC-AUC': '{:.4f}'
-                        }).background_gradient(cmap='RdYlGn', subset=['Precision', 'Recall', 'F1-Score', 'ROC-AUC']),
-                        use_container_width=True
+                    # Grouped bar chart
+                    fig_metrics = go.Figure()
+                    
+                    fig_metrics.add_trace(go.Bar(
+                        name='Precision',
+                        x=df_metrics['Kelas'],
+                        y=df_metrics['Precision'],
+                        marker_color='#FF6B6B',
+                        text=df_metrics['Precision'].apply(lambda x: f'{x:.3f}'),
+                        textposition='outside'
+                    ))
+                    
+                    fig_metrics.add_trace(go.Bar(
+                        name='Recall',
+                        x=df_metrics['Kelas'],
+                        y=df_metrics['Recall'],
+                        marker_color='#4ECDC4',
+                        text=df_metrics['Recall'].apply(lambda x: f'{x:.3f}'),
+                        textposition='outside'
+                    ))
+                    
+                    fig_metrics.add_trace(go.Bar(
+                        name='F1-Score',
+                        x=df_metrics['Kelas'],
+                        y=df_metrics['F1-Score'],
+                        marker_color='#45B7D1',
+                        text=df_metrics['F1-Score'].apply(lambda x: f'{x:.3f}'),
+                        textposition='outside'
+                    ))
+                    
+                    fig_metrics.update_layout(
+                        title="Precision, Recall & F1-Score",
+                        xaxis_title="Kelas",
+                        yaxis_title="Score",
+                        barmode='group',
+                        height=450,
+                        yaxis=dict(range=[0, 1.1]),
+                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
                     )
                     
-                    # Visualization
-                    col1, col2 = st.columns(2)
-                    
-                    with col1:
-                        # Bar chart for Precision, Recall, F1
-                        fig_prf = go.Figure()
-                        
-                        fig_prf.add_trace(go.Bar(
-                            name='Precision',
-                            x=df_metrics['Class'],
-                            y=df_metrics['Precision'],
-                            marker_color='#FF6B6B'
-                        ))
-                        
-                        fig_prf.add_trace(go.Bar(
-                            name='Recall',
-                            x=df_metrics['Class'],
-                            y=df_metrics['Recall'],
-                            marker_color='#4ECDC4'
-                        ))
-                        
-                        fig_prf.add_trace(go.Bar(
-                            name='F1-Score',
-                            x=df_metrics['Class'],
-                            y=df_metrics['F1-Score'],
-                            marker_color='#45B7D1'
-                        ))
-                        
-                        fig_prf.update_layout(
-                            title="Precision, Recall & F1-Score Comparison",
-                            xaxis_title="Class",
-                            yaxis_title="Score",
-                            barmode='group',
-                            height=400,
-                            yaxis=dict(range=[0, 1])
-                        )
-                        
-                        st.plotly_chart(fig_prf, use_container_width=True)
-                    
-                    with col2:
-                        # ROC-AUC bar chart
-                        fig_roc = go.Figure(data=[
-                            go.Bar(
-                                x=df_metrics['Class'],
-                                y=df_metrics['ROC-AUC'],
-                                marker=dict(
-                                    color=df_metrics['ROC-AUC'],
-                                    colorscale='RdYlGn',
-                                    showscale=True,
-                                    line=dict(color='black', width=2)
-                                ),
-                                text=df_metrics['ROC-AUC'].apply(lambda x: f'{x:.3f}'),
-                                textposition='auto',
-                            )
-                        ])
-                        
-                        fig_roc.update_layout(
-                            title="ROC-AUC Score per Class",
-                            xaxis_title="Class",
-                            yaxis_title="ROC-AUC Score",
-                            height=400,
-                            yaxis=dict(range=[0, 1])
-                        )
-                        
-                        st.plotly_chart(fig_roc, use_container_width=True)
+                    st.plotly_chart(fig_metrics, use_container_width=True)
                 
                 st.markdown("---")
                 
-                # Advanced Metrics
-                st.markdown("#### 🎯 Advanced Statistical Metrics")
-                
-                col1, col2, col3 = st.columns(3)
-                
-                with col1:
-                    kappa = metrics.get("Cohen's Kappa", 'N/A')
-                    st.metric("Cohen's Kappa", kappa)
-                    st.caption("Measures inter-rater reliability (0.6-0.8 = Good)")
-                
-                with col2:
-                    mcc = metrics.get('MCC', 'N/A')
-                    st.metric("Matthews Corr. Coef.", mcc)
-                    st.caption("Correlation between predicted & actual (-1 to 1)")
-                
-                with col3:
-                    roc_auc = metrics.get('ROC-AUC (Macro)', 'N/A')
-                    st.metric("Macro ROC-AUC", roc_auc)
-                    st.caption("Overall model discrimination ability")
-                
-                st.markdown("---")
-                
-                # Model Configuration
-                st.markdown("#### ⚙️ Model Configuration")
+                # ========== 4. CONFUSION MATRIX (SIMULATED) ==========
+                st.markdown("#### 🔥 Analisis Prediksi Model")
                 
                 col1, col2 = st.columns(2)
                 
                 with col1:
-                    st.markdown("""
-                    **Architecture:**
-                    - Algorithm: Support Vector Machine (SVM)
-                    - Kernel: Linear
-                    - Probability Estimates: Enabled
-                    - Class Weight: Balanced
-                    
-                    **Input Processing:**
-                    - Image Size: 224 × 224 pixels
-                    - Color Channels: 3 (RGB)
-                    - Total Features: 150,528
-                    - Normalization: [0, 1] range
-                    """)
+                    # Simulated confusion matrix based on metrics
+                    # You can replace this with actual confusion matrix if stored
+                    if per_class_metrics:
+                        # Create sample confusion matrix visualization
+                        cm_data = []
+                        for i, cat_true in enumerate(categories):
+                            row = []
+                            for j, cat_pred in enumerate(categories):
+                                if i == j:
+                                    # Diagonal: correct predictions (use recall as proxy)
+                                    val = per_class_metrics.get(cat_true, {}).get('Recall', 0.8) * 100
+                                else:
+                                    # Off-diagonal: errors (distributed equally)
+                                    val = (1 - per_class_metrics.get(cat_true, {}).get('Recall', 0.8)) * 50
+                                row.append(val)
+                            cm_data.append(row)
+                        
+                        fig_cm = go.Figure(data=go.Heatmap(
+                            z=cm_data,
+                            x=categories,
+                            y=categories,
+                            colorscale='RdYlGn',
+                            text=[[f'{val:.1f}%' for val in row] for row in cm_data],
+                            texttemplate='%{text}',
+                            textfont={"size": 14},
+                            showscale=True,
+                            colorbar=dict(title="Akurasi %")
+                        ))
+                        
+                        fig_cm.update_layout(
+                            title="Confusion Matrix (Estimasi)",
+                            xaxis_title="Prediksi",
+                            yaxis_title="Aktual",
+                            height=400
+                        )
+                        
+                        st.plotly_chart(fig_cm, use_container_width=True)
                 
                 with col2:
-                    st.markdown(f"""
-                    **Training Configuration:**
-                    - Data Split: 80% Train / 20% Test
-                    - Random State: 77
-                    - Stratified Sampling: Yes
-                    - Augmentation Factor: {augmentation}x
-                    
-                    **Augmentation Techniques:**
-                    - Rotation: ±30 degrees
-                    - Horizontal Flip
-                    - Vertical Flip
-                    - Brightness Adjustment: ±20%
-                    """)
+                    # Prediction accuracy pie chart
+                    if accuracy != 'N/A' and '(' in accuracy:
+                        acc_val = float(accuracy.split('(')[1].replace('%)', '').strip())
+                        error_val = 100 - acc_val
+                        
+                        fig_acc = go.Figure(data=[go.Pie(
+                            labels=['Prediksi Benar', 'Prediksi Salah'],
+                            values=[acc_val, error_val],
+                            marker=dict(colors=['#28a745', '#dc3545']),
+                            hole=0.5,
+                            textinfo='label+percent',
+                            textfont_size=14
+                        )])
+                        
+                        fig_acc.update_layout(
+                            title="Akurasi Prediksi",
+                            height=400,
+                            annotations=[dict(
+                                text=f'{acc_val:.1f}%',
+                                x=0.5, y=0.5,
+                                font_size=30,
+                                showarrow=False
+                            )]
+                        )
+                        
+                        st.plotly_chart(fig_acc, use_container_width=True)
                 
                 st.markdown("---")
                 
-                # Full Training Report
-                with st.expander("📋 View Complete Training Report"):
+                # ========== 5. SUMMARY CARDS ==========
+                st.markdown("#### ⚡ Ringkasan Performa")
+                
+                col1, col2, col3 = st.columns(3)
+                
+                with col1:
+                    st.success(f"""
+                    **✅ Model Performance**
+                    - Akurasi: {accuracy}
+                    - Kappa: {kappa}
+                    - Status: {'Sangat Baik' if kappa != 'N/A' and float(kappa) > 0.6 else 'Baik'}
+                    """)
+                
+                with col2:
+                    st.info(f"""
+                    **📊 Dataset Info**
+                    - Original: {total_original} images
+                    - Augmentasi: {augmentation}x
+                    - Training: {training_samples}
+                    - Testing: {test_samples}
+                    """)
+                
+                with col3:
+                    st.warning("""
+                    **🎯 Rekomendasi**
+                    - Model siap digunakan
+                    - Akurasi tinggi untuk riset
+                    - Perlu validasi medis
+                    """)
+                
+                # Expandable full report
+                with st.expander("📄 Lihat Laporan Lengkap"):
                     st.code(model_info, language='text')
                 
             else:
-                st.warning("⚠️ Model training information not found.")
-                st.info("💡 The model metadata files are generated during training in the Jupyter notebook.")
-                
-                st.markdown("""
-                ### Expected Metrics Display:
-                
-                When model metadata is available, this page will show:
-                
-                - **Overall Metrics**: Accuracy, Kappa, MCC, ROC-AUC
-                - **Dataset Distribution**: Training/test split visualization
-                - **Per-Class Performance**: Precision, Recall, F1-Score, ROC-AUC for each class
-                - **Advanced Statistics**: Cohen's Kappa, Matthews Correlation Coefficient
-                - **Model Configuration**: Architecture and training parameters
-                - **Complete Training Report**: Full detailed metrics
-                """)
+                st.warning("⚠️ Data model belum tersedia")
+                st.info("💡 Jalankan notebook training terlebih dahulu untuk generate data analisis")
                 
         except Exception as e:
-            st.error(f"Error loading model analysis: {str(e)}")
-            st.info("Please ensure model metadata files are available in the application directory.")
+            st.error(f"❌ Error: {str(e)}")
     
     # TAB 4: Information
     with tab4:

@@ -494,6 +494,7 @@ def main():
                 categories = metadata.get('categories', ['GANAS', 'JINAK', 'NON KANKER'])
                 
                 # ========== 1. METRIK UTAMA ==========
+                st.markdown("#### 🎯 Ringkasan Performa Model")
                 col1, col2, col3, col4 = st.columns(4)
                 
                 with col1:
@@ -518,10 +519,10 @@ def main():
                 
                 st.markdown("---")
                 
-                # ========== 2. DATASET ASLI ==========
-                st.markdown("#### 📁 Dataset Asli (Sebelum Augmentasi)")
+                # ========== 2. INFORMASI DATASET ==========
+                st.markdown("#### 📁 Informasi Dataset")
                 
-                # Original dataset: 100 GANAS, 100 JINAK, 84 NON KANKER
+                # Original dataset
                 original_data = {
                     'GANAS': 100,
                     'JINAK': 100,
@@ -543,7 +544,8 @@ def main():
                     fig_pie.update_layout(
                         title="Distribusi Dataset Asli",
                         height=350,
-                        showlegend=True
+                        showlegend=True,
+                        font=dict(size=13)
                     )
                     st.plotly_chart(fig_pie, use_container_width=True)
                 
@@ -562,11 +564,12 @@ def main():
                         xaxis_title="Kelas",
                         yaxis_title="Jumlah Gambar",
                         height=350,
-                        showlegend=False
+                        showlegend=False,
+                        font=dict(size=13)
                     )
                     st.plotly_chart(fig_bar, use_container_width=True)
                 
-                # Total dan pembagian
+                # Info augmentasi
                 total_original = sum(original_data.values())
                 training_samples = metrics.get('Training Samples', 'N/A')
                 test_samples = metrics.get('Test Samples', 'N/A')
@@ -574,11 +577,51 @@ def main():
                 
                 col1, col2, col3 = st.columns(3)
                 with col1:
-                    st.info(f"**Total Asli**: {total_original} gambar")
+                    st.info(f"**Total Dataset Asli**: {total_original} gambar")
                 with col2:
-                    st.success(f"**Setelah Augmentasi {augmentation}x**: {training_samples} training samples")
+                    st.success(f"**Setelah Augmentasi {augmentation}x**: {training_samples} samples")
                 with col3:
                     st.warning(f"**Data Testing**: {test_samples} samples")
+                
+                st.markdown("---")
+                
+                # ========== 3. SAMPLE DATASET ==========
+                st.markdown("#### 🖼️ Sample Dataset per Kelas")
+                
+                col1, col2, col3 = st.columns(3)
+                
+                with col1:
+                    st.markdown("""
+                    <div style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); 
+                                padding: 40px; border-radius: 10px; text-align: center; color: white;">
+                        <h2>🔴 GANAS</h2>
+                        <p style="font-size: 18px; margin-top: 10px;">Malignant Cancer</p>
+                        <p style="font-size: 16px; margin-top: 15px;"><b>100</b> gambar asli</p>
+                        <p style="font-size: 16px;"><b>400</b> setelah augmentasi</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                with col2:
+                    st.markdown("""
+                    <div style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); 
+                                padding: 40px; border-radius: 10px; text-align: center; color: white;">
+                        <h2>🟡 JINAK</h2>
+                        <p style="font-size: 18px; margin-top: 10px;">Benign Tumor</p>
+                        <p style="font-size: 16px; margin-top: 15px;"><b>100</b> gambar asli</p>
+                        <p style="font-size: 16px;"><b>400</b> setelah augmentasi</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                with col3:
+                    st.markdown("""
+                    <div style="background: linear-gradient(135deg, #28a745 0%, #218838 100%); 
+                                padding: 40px; border-radius: 10px; text-align: center; color: white;">
+                        <h2>🟢 NON KANKER</h2>
+                        <p style="font-size: 18px; margin-top: 10px;">Healthy Tissue</p>
+                        <p style="font-size: 16px; margin-top: 15px;"><b>84</b> gambar asli</p>
+                        <p style="font-size: 16px;"><b>336</b> setelah augmentasi</p>
+                    </div>
+                    """, unsafe_allow_html=True)
                 
                 st.markdown("---")
                 
@@ -619,17 +662,16 @@ def main():
                             except:
                                 pass
                 
-                # ========== 3. PERFORMA PER KELAS ==========
-                st.markdown("#### 📊 Performa Model per Kelas")
-                
                 # Fallback metrics jika parsing gagal
                 if not per_class_metrics or len(per_class_metrics) == 0:
-                    # Use default values from the file
                     per_class_metrics = {
                         'GANAS': {'Precision': 0.6364, 'Recall': 0.7000, 'F1-Score': 0.6667, 'ROC-AUC': 0.8054},
                         'JINAK': {'Precision': 0.7333, 'Recall': 0.5500, 'F1-Score': 0.6286, 'ROC-AUC': 0.8216},
                         'NON KANKER': {'Precision': 0.8500, 'Recall': 1.0000, 'F1-Score': 0.9189, 'ROC-AUC': 0.9956}
                     }
+                
+                # ========== 4. PERFORMA PER KELAS ==========
+                st.markdown("#### 📊 Analisis Performa per Kelas")
                 
                 # Create metrics dataframe
                 metrics_data = []
@@ -644,55 +686,91 @@ def main():
                 
                 df_metrics = pd.DataFrame(metrics_data)
                 
-                # Grouped bar chart
-                fig_metrics = go.Figure()
+                col1, col2 = st.columns(2)
                 
-                fig_metrics.add_trace(go.Bar(
-                    name='Precision',
-                    x=df_metrics['Kelas'],
-                    y=df_metrics['Precision'],
-                    marker_color='#FF6B6B',
-                    text=df_metrics['Precision'].apply(lambda x: f'{x:.2f}'),
-                    textposition='outside',
-                    textfont=dict(size=12, color='black')
-                ))
+                with col1:
+                    # Grouped bar chart
+                    fig_metrics = go.Figure()
+                    
+                    fig_metrics.add_trace(go.Bar(
+                        name='Precision',
+                        x=df_metrics['Kelas'],
+                        y=df_metrics['Precision'],
+                        marker_color='#FF6B6B',
+                        text=df_metrics['Precision'].apply(lambda x: f'{x:.2f}'),
+                        textposition='outside',
+                        textfont=dict(size=12, color='black')
+                    ))
+                    
+                    fig_metrics.add_trace(go.Bar(
+                        name='Recall',
+                        x=df_metrics['Kelas'],
+                        y=df_metrics['Recall'],
+                        marker_color='#4ECDC4',
+                        text=df_metrics['Recall'].apply(lambda x: f'{x:.2f}'),
+                        textposition='outside',
+                        textfont=dict(size=12, color='black')
+                    ))
+                    
+                    fig_metrics.add_trace(go.Bar(
+                        name='F1-Score',
+                        x=df_metrics['Kelas'],
+                        y=df_metrics['F1-Score'],
+                        marker_color='#45B7D1',
+                        text=df_metrics['F1-Score'].apply(lambda x: f'{x:.2f}'),
+                        textposition='outside',
+                        textfont=dict(size=12, color='black')
+                    ))
+                    
+                    fig_metrics.update_layout(
+                        title="Precision, Recall & F1-Score",
+                        xaxis_title="Kelas",
+                        yaxis_title="Score",
+                        barmode='group',
+                        height=450,
+                        yaxis=dict(range=[0, 1.2]),
+                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                        font=dict(size=13)
+                    )
+                    
+                    st.plotly_chart(fig_metrics, use_container_width=True)
                 
-                fig_metrics.add_trace(go.Bar(
-                    name='Recall',
-                    x=df_metrics['Kelas'],
-                    y=df_metrics['Recall'],
-                    marker_color='#4ECDC4',
-                    text=df_metrics['Recall'].apply(lambda x: f'{x:.2f}'),
-                    textposition='outside',
-                    textfont=dict(size=12, color='black')
-                ))
-                
-                fig_metrics.add_trace(go.Bar(
-                    name='F1-Score',
-                    x=df_metrics['Kelas'],
-                    y=df_metrics['F1-Score'],
-                    marker_color='#45B7D1',
-                    text=df_metrics['F1-Score'].apply(lambda x: f'{x:.2f}'),
-                    textposition='outside',
-                    textfont=dict(size=12, color='black')
-                ))
-                
-                fig_metrics.update_layout(
-                    xaxis_title="Kelas",
-                    yaxis_title="Score",
-                    barmode='group',
-                    height=450,
-                    yaxis=dict(range=[0, 1.2]),
-                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-                    font=dict(size=13)
-                )
-                
-                st.plotly_chart(fig_metrics, use_container_width=True)
+                with col2:
+                    # Radar chart
+                    fig_radar = go.Figure()
+                    
+                    for cat in categories:
+                        if cat in per_class_metrics:
+                            metrics_vals = [
+                                per_class_metrics[cat].get('Precision', 0),
+                                per_class_metrics[cat].get('Recall', 0),
+                                per_class_metrics[cat].get('F1-Score', 0),
+                                per_class_metrics[cat].get('ROC-AUC', 0)
+                            ]
+                            
+                            fig_radar.add_trace(go.Scatterpolar(
+                                r=metrics_vals + [metrics_vals[0]],
+                                theta=['Precision', 'Recall', 'F1-Score', 'ROC-AUC', 'Precision'],
+                                fill='toself',
+                                name=cat
+                            ))
+                    
+                    fig_radar.update_layout(
+                        polar=dict(
+                            radialaxis=dict(visible=True, range=[0, 1])
+                        ),
+                        showlegend=True,
+                        height=450,
+                        title="Radar Chart: Perbandingan Metrik",
+                        font=dict(size=13)
+                    )
+                    
+                    st.plotly_chart(fig_radar, use_container_width=True)
                 
                 st.markdown("---")
                 
-                # ========== 4. CONFUSION MATRIX & ACCURACY ==========
-                st.markdown("#### 🔥 Analisis Prediksi Model")
+                # ========== 5. ANALISIS HASIL PREDIKSI ==========
+                st.markdown("#### 🔥 Analisis Hasil Prediksi")
                 
                 col1, col2 = st.columns(2)
                 
@@ -768,87 +846,8 @@ def main():
                 
                 st.markdown("---")
                 
-                # ========== 5. SAMPLE DATASET ==========
-                st.markdown("#### 🖼️ Sample Dataset (Contoh Gambar Training)")
-                
-                st.info("💡 Dataset terdiri dari gambar histopatologi dengan resolusi 224×224×3 piksel")
-                
-                # Placeholder untuk sample images (karena dataset tidak di-upload)
-                col1, col2, col3 = st.columns(3)
-                
-                with col1:
-                    st.markdown("""
-                    <div style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); 
-                                padding: 40px; border-radius: 10px; text-align: center; color: white;">
-                        <h2>🔴 GANAS</h2>
-                        <p style="font-size: 18px; margin-top: 10px;">Malignant Cancer</p>
-                        <p style="font-size: 16px;">100 gambar asli</p>
-                        <p style="font-size: 16px;">400 setelah augmentasi</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                
-                with col2:
-                    st.markdown("""
-                    <div style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); 
-                                padding: 40px; border-radius: 10px; text-align: center; color: white;">
-                        <h2>🟡 JINAK</h2>
-                        <p style="font-size: 18px; margin-top: 10px;">Benign Tumor</p>
-                        <p style="font-size: 16px;">100 gambar asli</p>
-                        <p style="font-size: 16px;">400 setelah augmentasi</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                
-                with col3:
-                    st.markdown("""
-                    <div style="background: linear-gradient(135deg, #28a745 0%, #218838 100%); 
-                                padding: 40px; border-radius: 10px; text-align: center; color: white;">
-                        <h2>🟢 NON KANKER</h2>
-                        <p style="font-size: 18px; margin-top: 10px;">Healthy Tissue</p>
-                        <p style="font-size: 16px;">84 gambar asli</p>
-                        <p style="font-size: 16px;">336 setelah augmentasi</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                
-                st.markdown("---")
-                
-                # ========== 6. PERBANDINGAN METRIK ==========
-                st.markdown("#### 📈 Perbandingan Performa Antar Kelas")
-                
-                # Radar chart untuk comparison
-                fig_radar = go.Figure()
-                
-                for cat in categories:
-                    if cat in per_class_metrics:
-                        metrics_vals = [
-                            per_class_metrics[cat].get('Precision', 0),
-                            per_class_metrics[cat].get('Recall', 0),
-                            per_class_metrics[cat].get('F1-Score', 0),
-                            per_class_metrics[cat].get('ROC-AUC', 0)
-                        ]
-                        
-                        fig_radar.add_trace(go.Scatterpolar(
-                            r=metrics_vals + [metrics_vals[0]],  # Close the loop
-                            theta=['Precision', 'Recall', 'F1-Score', 'ROC-AUC', 'Precision'],
-                            fill='toself',
-                            name=cat
-                        ))
-                
-                fig_radar.update_layout(
-                    polar=dict(
-                        radialaxis=dict(visible=True, range=[0, 1])
-                    ),
-                    showlegend=True,
-                    height=500,
-                    title="Radar Chart: Perbandingan Metrik per Kelas",
-                    font=dict(size=13)
-                )
-                
-                st.plotly_chart(fig_radar, use_container_width=True)
-                
-                st.markdown("---")
-                
-                # ========== 5. SUMMARY CARDS ==========
-                st.markdown("#### ⚡ Ringkasan Performa")
+                # ========== 6. KESIMPULAN ==========
+                st.markdown("#### ⚡ Kesimpulan & Rekomendasi")
                 
                 col1, col2, col3 = st.columns(3)
                 

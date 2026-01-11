@@ -936,9 +936,6 @@ def main():
         
         st.markdown("<br>", unsafe_allow_html=True)
         
-        ## 📊 Dataset Information
-        """)
-        
         # Dataset cards
         with st.container():
             st.markdown("""
@@ -1110,11 +1107,6 @@ def main():
             """)
         
         st.markdown("<br>", unsafe_allow_html=True)
-        
-        st.markdown("""
-        
-        ## ✅ Kesimpulan & Saran
-        """)
         
         with st.container():
             st.markdown("""

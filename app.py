@@ -723,7 +723,7 @@ def main():
                         texttemplate='%{text}',
                         textfont={"size": 16, "color": "black"},
                         showscale=True,
-                        colorbar=dict(title="Akurasi %", titleside="right")
+                        colorbar=dict(title=dict(text="Akurasi %", side="right"))
                     ))
                     
                     fig_cm.update_layout(

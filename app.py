@@ -29,45 +29,49 @@ st.markdown("""
 <style>
     /* Sidebar styling */
     [data-testid="stSidebar"] {
-        min-width: 280px;
-        max-width: 280px;
-        background: #fafafa;
+        min-width: 320px;
+        max-width: 320px;
+        background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
     }
     
     [data-testid="stSidebar"] > div:first-child {
-        background: #fafafa;
+        background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
     }
     
-    /* Simple button styling */
+    /* Custom button styling for navigation */
     .stButton > button {
         width: 100%;
-        border-radius: 8px;
-        padding: 14px 18px;
+        border-radius: 12px;
+        padding: 16px 20px;
         font-weight: 500;
         font-size: 15px;
         border: none;
-        background: white;
-        color: #333;
-        transition: all 0.2s ease;
+        background: transparent;
+        color: #64748b;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         text-align: left;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        box-shadow: none;
+        position: relative;
     }
     
     .stButton > button:hover {
-        background: #f5f5f5;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        background: rgba(102, 126, 234, 0.12);
+        color: #667eea;
+        transform: translateX(4px);
     }
     
-    /* Active state - Red/Pink solid */
+    /* Active state simulation via type primary */
     .stButton > button[kind="primary"] {
-        background: #ff5757;
+        background: #667eea;
         color: white;
-        box-shadow: 0 2px 6px rgba(255, 87, 87, 0.3);
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        font-weight: 600;
     }
     
     .stButton > button[kind="primary"]:hover {
-        background: #ff4444;
-        box-shadow: 0 3px 8px rgba(255, 87, 87, 0.4);
+        background: #5568d3;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        transform: translateX(4px);
     }
     
     /* Main theme */
@@ -286,13 +290,36 @@ def main():
     if 'active_page' not in st.session_state:
         st.session_state.active_page = 'Image Classification'
     
-    # Sidebar - Simple Navigation
+    # Sidebar - Navigation Only
     with st.sidebar:
-        st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
+        st.markdown("""
+        <div style="text-align: center; padding: 25px 0 20px 0;">
+            <div style="background: #667eea; 
+                        width: 70px; height: 70px; border-radius: 18px; 
+                        margin: 0 auto 15px auto; display: flex; 
+                        align-items: center; justify-content: center;
+                        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);">
+                <i class="fas fa-hospital" style="font-size: 36px; color: white;"></i>
+            </div>
+            <h2 style="color: #1e293b; margin: 0; font-size: 20px; font-weight: 700;">Cancer Classification</h2>
+            <p style="color: #64748b; font-size: 12px; margin-top: 5px; font-weight: 500;">Medical Image Analysis</p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        # Navigation buttons - Simple style
+        st.markdown("""<div style="border-bottom: 1px solid #e2e8f0; margin: 20px 0;"></div>""", unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div style="margin: 0 0 16px 0;">
+            <h3 style="color: #94a3b8; font-size: 11px; font-weight: 700; 
+                       text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding-left: 4px;">
+                Navigation
+            </h3>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Navigation buttons - Clean professional design
         if st.button(
-            "🏠  Beranda",
+            "   Image Classification",
             use_container_width=True,
             type="primary" if st.session_state.active_page == 'Image Classification' else "secondary",
             key="nav_1"
@@ -300,10 +327,8 @@ def main():
             st.session_state.active_page = 'Image Classification'
             st.rerun()
         
-        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
-        
         if st.button(
-            "🖼️  Prediksi Gambar",
+            "   Batch Processing",
             use_container_width=True,
             type="primary" if st.session_state.active_page == 'Batch Processing' else "secondary",
             key="nav_2"
@@ -311,10 +336,8 @@ def main():
             st.session_state.active_page = 'Batch Processing'
             st.rerun()
         
-        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
-        
         if st.button(
-            "📊  Analisis Model",
+            "   Model Analysis",
             use_container_width=True,
             type="primary" if st.session_state.active_page == 'Model Analysis' else "secondary",
             key="nav_3"
@@ -322,16 +345,35 @@ def main():
             st.session_state.active_page = 'Model Analysis'
             st.rerun()
         
-        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
-        
         if st.button(
-            "ℹ️  Informasi",
+            "   Information",
             use_container_width=True,
             type="primary" if st.session_state.active_page == 'Information' else "secondary",
             key="nav_4"
         ):
             st.session_state.active_page = 'Information'
             st.rerun()
+        
+        st.markdown("""<div style="border-bottom: 1px solid #e2e8f0; margin: 24px 0 20px 0;"></div>""", unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div style="background: rgba(102, 126, 234, 0.06); 
+                    padding: 16px; border-radius: 14px; text-align: center;
+                    border: 1px solid rgba(102, 126, 234, 0.1);">
+            <div style="width: 40px; height: 40px; border-radius: 12px; 
+                        background: #667eea;
+                        margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center;
+                        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);">
+                <i class="fas fa-graduation-cap" style="font-size: 18px; color: white;"></i>
+            </div>
+            <p style="color: #475569; font-size: 12px; font-weight: 600; margin: 0;">
+                Institut Teknologi Del
+            </p>
+            <p style="color: #94a3b8; font-size: 11px; margin: 4px 0 0 0; font-weight: 500;">
+                Kelompok 4 • IF-10
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
     
     # Main content based on active page
     # ===== PAGE 1: Image Classification =====

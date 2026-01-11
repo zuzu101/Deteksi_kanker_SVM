@@ -41,10 +41,10 @@ st.markdown("""
     /* Custom button styling for navigation */
     .stButton > button {
         width: 100%;
-        border-radius: 12px;
-        padding: 16px 20px;
+        border-radius: 10px;
+        padding: 12px 16px;
         font-weight: 500;
-        font-size: 15px;
+        font-size: 14px;
         border: 2px solid #e2e8f0;
         background: white;
         color: #64748b;
@@ -284,25 +284,25 @@ def main():
     # Sidebar - Navigation Only
     with st.sidebar:
         st.markdown("""
-        <div style="text-align: center; padding: 25px 0 20px 0;">
+        <div style="text-align: center; padding: 8px 0 6px 0;">
             <div style="background: #667eea; 
-                        width: 70px; height: 70px; border-radius: 18px; 
-                        margin: 0 auto 15px auto; display: flex; 
+                        width: 48px; height: 48px; border-radius: 12px; 
+                        margin: 0 auto 6px auto; display: flex; 
                         align-items: center; justify-content: center;
-                        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);">
-                <i class="fas fa-hospital" style="font-size: 36px; color: white;"></i>
+                        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);">
+                <i class="fas fa-hospital" style="font-size: 24px; color: white;"></i>
             </div>
-            <h2 style="color: #1e293b; margin: 0; font-size: 20px; font-weight: 700;">Cancer Classification</h2>
-            <p style="color: #64748b; font-size: 12px; margin-top: 5px; font-weight: 500;">Medical Image Analysis</p>
+            <h2 style="color: #1e293b; margin: 0; font-size: 17px; font-weight: 700; line-height: 1.2;">Cancer Classification</h2>
+            <p style="color: #94a3b8; font-size: 11px; margin-top: 2px; font-weight: 500;">Medical Image Analysis</p>
         </div>
         """, unsafe_allow_html=True)
         
-        st.markdown("""<div style="border-bottom: 1px solid #e2e8f0; margin: 20px 0;"></div>""", unsafe_allow_html=True)
+        st.markdown("""<div style="border-bottom: 1px solid #e2e8f0; margin: 8px 0;"></div>""", unsafe_allow_html=True)
         
         st.markdown("""
-        <div style="margin: 0 0 16px 0;">
-            <h3 style="color: #94a3b8; font-size: 11px; font-weight: 700; 
-                       text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding-left: 4px;">
+        <div style="margin: 0 0 8px 0;">
+            <h3 style="color: #94a3b8; font-size: 10px; font-weight: 700; 
+                       text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; padding-left: 4px;">
                 Navigation
             </h3>
         </div>
@@ -345,22 +345,22 @@ def main():
             st.session_state.active_page = 'Information'
             st.rerun()
         
-        st.markdown("""<div style="border-bottom: 1px solid #e2e8f0; margin: 24px 0 20px 0;"></div>""", unsafe_allow_html=True)
+        st.markdown("""<div style="border-bottom: 1px solid #e2e8f0; margin: 16px 0 12px 0;"></div>""", unsafe_allow_html=True)
         
         st.markdown("""
         <div style="background: rgba(102, 126, 234, 0.06); 
-                    padding: 16px; border-radius: 14px; text-align: center;
+                    padding: 12px; border-radius: 12px; text-align: center;
                     border: 1px solid rgba(102, 126, 234, 0.1);">
-            <div style="width: 40px; height: 40px; border-radius: 12px; 
+            <div style="width: 36px; height: 36px; border-radius: 10px; 
                         background: #667eea;
-                        margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center;
-                        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);">
-                <i class="fas fa-graduation-cap" style="font-size: 18px; color: white;"></i>
+                        margin: 0 auto 8px auto; display: flex; align-items: center; justify-content: center;
+                        box-shadow: 0 2px 6px rgba(102, 126, 234, 0.2);">
+                <i class="fas fa-graduation-cap" style="font-size: 16px; color: white;"></i>
             </div>
-            <p style="color: #475569; font-size: 12px; font-weight: 600; margin: 0;">
+            <p style="color: #475569; font-size: 11px; font-weight: 600; margin: 0;">
                 Institut Teknologi Del
             </p>
-            <p style="color: #94a3b8; font-size: 11px; margin: 4px 0 0 0; font-weight: 500;">
+            <p style="color: #94a3b8; font-size: 10px; margin: 3px 0 0 0; font-weight: 500;">
                 Kelompok 4 • IF-10
             </p>
         </div>

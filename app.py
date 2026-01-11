@@ -45,32 +45,37 @@ st.markdown("""
         padding: 16px 20px;
         font-weight: 500;
         font-size: 15px;
-        border: none;
-        background: transparent;
+        border: 2px solid #e2e8f0;
+        background: white;
         color: #64748b;
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         text-align: left;
-        box-shadow: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         position: relative;
     }
     
     .stButton > button:hover {
-        background: rgba(102, 126, 234, 0.12);
+        background: white;
+        border-color: #667eea;
         color: #667eea;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
         transform: translateX(4px);
     }
     
     /* Active state simulation via type primary */
     .stButton > button[kind="primary"] {
-        background: #667eea;
-        color: white;
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        background: white;
+        border: 2px solid #667eea;
+        color: #667eea;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
         font-weight: 600;
     }
     
     .stButton > button[kind="primary"]:hover {
-        background: #5568d3;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        background: #667eea;
+        border-color: #667eea;
+        color: white;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         transform: translateX(4px);
     }
     

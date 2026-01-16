@@ -1,0 +1,51 @@
+======================================================================
+OPTIMIZED SVM MODEL - VALID RESULTS (NO DATA LEAKAGE)
+======================================================================
+
+Timestamp: 20260111_195438
+
+DATASET INFO:
+  Original images: 284
+  Training samples (after augmentation): 908
+  Testing samples (ORIGINAL - not augmented): 57
+  Features: 150,528
+
+DATA HANDLING:
+  ✅ Split BEFORE augmentation (no data leakage)
+  ✅ Augmentation ONLY on training set
+  ✅ Test set kept ORIGINAL
+
+BEST MODEL PARAMETERS:
+  C: 0.1
+  kernel: linear
+
+CROSS-VALIDATION RESULTS:
+  Best CV Score: 0.9020
+  CV Mean: 0.9020
+  CV Std: 0.0177
+
+ACCURACY SCORES:
+  Training: 1.0000
+  Testing: 0.7895
+  Overfitting Gap: 0.2105
+
+ADVANCED METRICS:
+  Cohen's Kappa: 0.6833
+  Average MCC: 0.6956
+  Average ROC-AUC: 0.9216
+  Mean AP: 0.8494
+
+CLASSIFICATION REPORT:
+              precision    recall  f1-score   support
+
+       GANAS       0.75      0.60      0.67        20
+       JINAK       0.67      0.80      0.73        20
+  NON KANKER       1.00      1.00      1.00        17
+
+    accuracy                           0.79        57
+   macro avg       0.81      0.80      0.80        57
+weighted avg       0.80      0.79      0.79        57
+
+======================================================================
+NOTE: These results are VALID - no data leakage!
+======================================================================

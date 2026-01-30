@@ -398,17 +398,17 @@ def main():
                 type=['jpg', 'jpeg', 'png'],
                 help="Upload a medical image for cancer classification"
             )
-            
+            # Reset hasil prediksi lama setiap kali upload gambar baru
             if uploaded_file is not None:
+                if 'last_result' in st.session_state:
+                    del st.session_state['last_result']
                 # Display uploaded image
                 image = Image.open(uploaded_file)
                 st.image(image, caption="Uploaded Image", use_container_width=True)
-                
                 # Predict button
                 if st.button("🔬 Analyze Image", use_container_width=True, type="primary"):
                     with st.spinner("Analyzing image..."):
                         result = predict_image(image, model, scaler)
-                    
                     if result['success']:
                         # Store result in session state
                         st.session_state['last_result'] = result
@@ -467,7 +467,7 @@ def main():
                 
                 elif predicted_class == 'JINAK':
                     st.warning("""
-                    **⚠️ DETEKSI TUMOR JINAK (BENIGN)**
+                    **⚠️ DETEKSI KANKER JINAK (BENIGN)**
                     
                     **Tindakan yang Disarankan:**
                     - 👨‍⚕️ **Konsultasi dokter spesialis** untuk evaluasi lebih lanjut
@@ -475,7 +475,7 @@ def main():
                     - 📊 **Pemeriksaan tambahan:** USG atau biopsi jika diperlukan
                     - 🩺 **Observasi gejala:** Perhatikan perubahan ukuran/bentuk
                     
-                    **Catatan:** Tumor jinak umumnya tidak menyebar, namun tetap perlu pengawasan medis.
+                    **Catatan:** Kanker jinak umumnya tidak menyebar, namun tetap perlu pengawasan medis.
                     """)
                 
                 else:  # NON KANKER
@@ -504,26 +504,25 @@ def main():
                     'Probability (%)': list(probs.values())
                 })
                 
-                # Plotly bar chart
+
+                # Plotly pie chart
                 fig = go.Figure(data=[
-                    go.Bar(
-                        x=df_probs['Class'],
-                        y=df_probs['Probability (%)'],
-                        marker_color=['#dc3545', '#ffc107', '#28a745'],
-                        text=[f"{v:.1f}%" for v in df_probs['Probability (%)']],
-                        textposition='outside'
+                    go.Pie(
+                        labels=df_probs['Class'],
+                        values=df_probs['Probability (%)'],
+                        marker_colors=['#dc3545', '#ffc107', '#28a745'],
+                        textinfo='label+percent',
+                        hoverinfo='label+percent+value',
+                        hole=0.3
                     )
                 ])
-                
+
                 fig.update_layout(
                     title="Class Probabilities",
-                    xaxis_title="Cancer Type",
-                    yaxis_title="Probability (%)",
-                    yaxis_range=[0, 105],
-                    showlegend=False,
+                    showlegend=True,
                     height=400
                 )
-                
+
                 st.plotly_chart(fig, use_container_width=True)
                 
                 # Detailed probabilities
@@ -774,7 +773,7 @@ def main():
                 <div style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); 
                             padding: 40px; border-radius: 10px; text-align: center; color: white;">
                     <h2>🟡 JINAK</h2>
-                    <p style="font-size: 18px; margin-top: 10px;">Benign Tumor</p>
+                    <p style="font-size: 18px; margin-top: 10px;">Kanker Jinak</p>
                     <p style="font-size: 16px; margin-top: 15px;"><b>100</b> gambar asli</p>
                     <p style="font-size: 16px;"><b>400</b> setelah augmentasi</p>
                 </div>
@@ -995,7 +994,7 @@ def main():
             st.markdown("""
 <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 30px;">
 <p style="text-align: justify; line-height: 1.8;">
-Aplikasi ini adalah sistem bantuan untuk menganalisis gambar jaringan tubuh (histopatologi) dan memberikan informasi apakah jaringan tersebut termasuk kategori <b>GANAS</b> (kanker yang berbahaya), <b>JINAK</b> (tumor yang tidak berbahaya), atau <b>NON KANKER</b> (jaringan sehat normal).
+Aplikasi ini adalah sistem bantuan untuk menganalisis gambar jaringan tubuh (histopatologi) dan memberikan informasi apakah jaringan tersebut termasuk kategori <b>GANAS</b> (kanker yang berbahaya), <b>JINAK</b> (tidak berbahaya), atau <b>NON KANKER</b> (jaringan sehat normal).
 </p>
 <p style="text-align: justify; line-height: 1.8;">
 Sistem ini menggunakan teknologi <i>machine learning</i> (pembelajaran mesin) yang telah dilatih dengan 284 gambar jaringan untuk dapat mengenali pola-pola tertentu. Anda cukup mengunggah foto jaringan, dan sistem akan memberikan hasil analisis dalam hitungan detik.
@@ -1018,7 +1017,7 @@ Sistem ini menggunakan teknologi <i>machine learning</i> (pembelajaran mesin) ya
 <h2 style="margin: 0;">🔴 GANAS</h2>
 <p style="font-size: 16px; margin-top: 10px;">Malignant Cancer</p>
 <h3 style="margin-top: 15px;">100 gambar</h3>
-<p style="font-size: 14px;">Tumor ganas yang dapat menyebar</p>
+<p style="font-size: 14px;">Kanker ganas yang dapat menyebar</p>
 </div>
 """, unsafe_allow_html=True)
         
@@ -1026,9 +1025,9 @@ Sistem ini menggunakan teknologi <i>machine learning</i> (pembelajaran mesin) ya
             st.markdown("""
 <div style="background: #ffc107; padding: 20px; border-radius: 10px; text-align: center; color: white;">
 <h2 style="margin: 0;">🟡 JINAK</h2>
-<p style="font-size: 16px; margin-top: 10px;">Benign Tumor</p>
+<p style="font-size: 16px; margin-top: 10px;">Benign Cancer</p>
 <h3 style="margin-top: 15px;">100 gambar</h3>
-<p style="font-size: 14px;">Tumor jinak non-kanker</p>
+<p style="font-size: 14px;">Kanker jinak yang tidak menyebar</p>
 </div>
 """, unsafe_allow_html=True)
         
